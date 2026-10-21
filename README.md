@@ -4,6 +4,8 @@
 
 ![License](https://img.shields.io/badge/license-MIT-green) ![MCP](https://img.shields.io/badge/data-McDonald's%20China%20MCP-red) ![1024](https://img.shields.io/badge/1024-程序员节-yellow)
 
+🎮 **在线开玩**：<https://xiaoxiangguo.github.io/just-burger-it/> · 无需安装，打开即搭
+
 <p align="center">
   <img src="docs/screenshots/01-default.png" width="49%" alt="默认页面">
   <img src="docs/screenshots/02-custom.png" width="49%" alt="自选配方页面">
