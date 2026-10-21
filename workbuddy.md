@@ -1,6 +1,6 @@
-# workbuddy.md — 麦门汉堡搭建器 · WorkBuddy 开发上下文
+# workbuddy.md — 麦门之搭了个堡 · WorkBuddy 开发上下文
 
-> 本文件为参赛作品「麦门汉堡搭建器」（定制专属于你的麦门汉堡🍔）在腾讯 WorkBuddy 中完成创意构思、数据实测与开发全过程的对话上下文摘要。
+> 本文件为参赛作品「麦门之搭了个堡」（定制专属于你的麦门汉堡🍔）在腾讯 WorkBuddy 中完成创意构思、数据实测与开发全过程的对话上下文摘要。
 > 导出时间：2026-10-21（北京时间）
 
 ## 会话概况
@@ -39,8 +39,8 @@
 - 用官方营养表差值法反推单食材热量（牛肉饼 135 kcal、安格斯厚牛饼 307 kcal、吉士片 46 kcal），并在前端区分「官方差值/推算/创意」三种口径
 
 ### 4. 开发与验证
-- 产出 `data/components.json`（初版 5 类 34 个组件、10 款真实产品指纹；对照官方菜单补表后为 **37 个组件、16 款产品指纹**）
-- 产出 `index.html`：漫画风 SVG 剖面图（粗描边/芝麻粒/烤痕/芝士垂坠/生菜褶皱/蒸汽）、营养主视觉（大号热量 + 每日占比环 + 三大营养素能量占比条 + 钠预警）、相似度彩蛋、出餐卡导出
+- 产出 `data/components.json`（初版 5 类 34 个组件、10 款真实产品指纹；对照官方菜单补表后为 37 个组件 / 16 款产品；加入传说层后 **61 个组件**）
+- 产出 `index.html`：漫画风 SVG 剖面图（粗描边/芝麻粒/烤痕/芝士垂坠/生菜褶皱/蒸汽）、营养主视觉（大号热量 + 每日占比环 + 三大营养素能量占比条 + 钠预警）、相似度彩蛋、许愿卡导出
 - 用 Node + DOM stub 执行页面渲染逻辑做无头验证：默认汉堡识别为「麦辣鸡腿汉堡 100%」、随机组合渲染正常、SVG 几何无越界
 
 ### 5. 形态确认与运行时 MCP 补强
@@ -65,6 +65,6 @@
 | 门店菜单 122 个商品、15 个分类 | 存档 `tools/raw/meals.json` |
 | 11 款汉堡可拉取 `modification` 食材级配料（汇总 17 种） | 存档 `tools/raw/burger_details.json`、`data/mod_items.json` |
 | 运行时确实调用 MCP 校验门店在售 | `python3 skill/scripts/burger.py build --bun sesame --patty spicychicken --veg choppedlettuce --sauce chickensauce --live --city 深圳市 --keyword 南山` |
-| 组件库自洽（37 个组件 / 16 款产品指纹，热量偏差 ≤ ±20%） | `python3 tools/validate_components.py` |
+| 组件库自洽（61 个组件 / 16 款产品指纹，热量偏差 ≤ ±20%） | `python3 tools/validate_components.py` |
 
 以上每一条命令都在本仓库内可独立执行，不依赖会话记录本身。

@@ -70,8 +70,8 @@ def main():
                 errors.append(f"{rb['name']} 引用了不存在的食材：{lid}")
                 continue
             total += by_id[lid]["kcal"]
-            if by_id[lid].get("source") == "creative":
-                errors.append(f"{rb['name']}（官方产品）含创意食材：{by_id[lid]['name']}")
+            if by_id[lid].get("source") in ("creative", "legend"):
+                errors.append(f"{rb['name']}（官方产品）含非官方食材：{by_id[lid]['name']}")
         official = rb.get("officialKcal")
         if official:
             dev = (total - official) / official

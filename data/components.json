@@ -1,6 +1,6 @@
 {
   "meta": {
-    "name": "麦门汉堡搭建器 · 组件库",
+    "name": "麦门之搭了个堡 · 组件库",
     "fetchedAt": "2026-10-21",
     "storeCode": "1420207",
     "realBurgersUpdatedAt": "2026-10-21",
@@ -17,7 +17,11 @@
     {"id": "muffin", "name": "英式麦满分", "kcal": 110, "protein": 4, "fat": 1.5, "carb": 21, "sodium": 280, "source": "estimated", "basis": "原味板烧鸡腿麦满分246kcal 反推", "real": true},
     {"id": "angusbun", "name": "安格斯厚堡包", "kcal": 190, "protein": 6, "fat": 3, "carb": 34, "sodium": 380, "source": "estimated", "basis": "芝士安格斯厚牛堡696kcal 反推", "real": true},
     {"id": "blackbun", "name": "墨鱼汁黑堡包", "kcal": 130, "protein": 4, "fat": 2, "carb": 24, "sodium": 310, "source": "creative", "basis": "参照芝麻堡包", "real": false},
-    {"id": "ricebun", "name": "米堡(双层米饼)", "kcal": 140, "protein": 3, "fat": 1, "carb": 31, "sodium": 260, "source": "creative", "basis": "参照米制主食", "real": false}
+    {"id": "ricebun", "name": "米堡(双层米饼)", "kcal": 140, "protein": 3, "fat": 1, "carb": 31, "sodium": 260, "source": "creative", "basis": "参照米制主食", "real": false},
+    {"id": "cheesecrown", "name": "芝士火山包", "kcal": 260, "protein": 8, "fat": 9, "carb": 36, "sodium": 520, "source": "legend", "basis": "传说层：官方菜单无此物，热量按同类食材粗估，仅供构词", "color": "#f0a53a"},
+    {"id": "charcoalbun", "name": "黑金竹炭包", "kcal": 150, "protein": 5, "fat": 3, "carb": 27, "sodium": 300, "source": "legend", "basis": "传说层：官方菜单无此物，热量按同类食材粗估，仅供构词", "color": "#3a3a42"},
+    {"id": "croissant", "name": "可颂牛角包", "kcal": 230, "protein": 5, "fat": 12, "carb": 26, "sodium": 380, "source": "legend", "basis": "传说层：官方菜单无此物，热量按同类食材粗估，仅供构词", "color": "#d9a353"},
+    {"id": "tartbun", "name": "蛋挞壳包", "kcal": 180, "protein": 3, "fat": 8, "carb": 24, "sodium": 210, "source": "legend", "basis": "传说层：官方菜单无此物，热量按同类食材粗估，仅供构词", "color": "#e8c07a"}
   ],
   "patties": [
     {"id": "beef", "name": "经典牛肉饼", "kcal": 135, "protein": 11, "fat": 10, "carb": 1, "sodium": 344, "source": "mcp-diff", "basis": "双层吉士汉堡429 - 吉士汉堡包294", "real": true},
@@ -30,11 +34,21 @@
     {"id": "pork", "name": "猪柳(早餐肉)", "kcal": 126, "protein": 6, "fat": 11, "carb": 1, "sodium": 364, "source": "mcp-diff", "basis": "双层猪柳蛋麦满分513 - 猪柳蛋麦满分387", "real": true},
     {"id": "bacon", "name": "培根", "kcal": 60, "protein": 3, "fat": 5, "carb": 0.5, "sodium": 300, "source": "estimated", "basis": "培根蔬萃双层牛堡 与双层牛堡差值", "real": true},
     {"id": "shrimp", "name": "鲜虾排(创意)", "kcal": 150, "protein": 14, "fat": 7, "carb": 8, "sodium": 350, "source": "creative", "basis": "参照鳕鱼排", "real": false},
-    {"id": "turkeynoodle", "name": "火鸡面肉饼(创意)", "kcal": 280, "protein": 15, "fat": 14, "carb": 22, "sodium": 900, "source": "creative", "basis": "参照麦辣鸡腿肉+火鸡面酱钠含量", "real": false}
+    {"id": "turkeynoodle", "name": "火鸡面肉饼(创意)", "kcal": 280, "protein": 15, "fat": 14, "carb": 22, "sodium": 900, "source": "creative", "basis": "参照麦辣鸡腿肉+火鸡面酱钠含量", "real": false},
+    {"id": "lobster", "name": "整只龙虾", "kcal": 120, "protein": 18, "fat": 2, "carb": 3, "sodium": 420, "source": "legend", "basis": "传说层：官方菜单无此物，热量按同类食材粗估，仅供构词", "color": "#ef6a52"},
+    {"id": "malahotpot", "name": "麻辣香锅饼", "kcal": 320, "protein": 12, "fat": 22, "carb": 20, "sodium": 780, "source": "legend", "basis": "传说层：官方菜单无此物，热量按同类食材粗估，仅供构词", "color": "#b23a2e"},
+    {"id": "luosifen", "name": "螺蛳粉饼", "kcal": 280, "protein": 9, "fat": 14, "carb": 30, "sodium": 900, "source": "legend", "basis": "传说层：官方菜单无此物，热量按同类食材粗估，仅供构词", "color": "#b8a05a"},
+    {"id": "roastduck", "name": "北京烤鸭片", "kcal": 260, "protein": 16, "fat": 19, "carb": 6, "sodium": 480, "source": "legend", "basis": "传说层：官方菜单无此物，热量按同类食材粗估，仅供构词", "color": "#a8552f"},
+    {"id": "stinkytofu", "name": "臭豆腐排", "kcal": 180, "protein": 12, "fat": 11, "carb": 8, "sodium": 520, "source": "legend", "basis": "传说层：官方菜单无此物，热量按同类食材粗估，仅供构词", "color": "#8a8f5e"},
+    {"id": "crayfish", "name": "小龙虾肉饼", "kcal": 150, "protein": 14, "fat": 6, "carb": 5, "sodium": 380, "source": "legend", "basis": "传说层：官方菜单无此物，热量按同类食材粗估，仅供构词", "color": "#e2593f"},
+    {"id": "wagyu", "name": "和牛厚切", "kcal": 380, "protein": 20, "fat": 32, "carb": 2, "sodium": 300, "source": "legend", "basis": "传说层：官方菜单无此物，热量按同类食材粗估，仅供构词", "color": "#7d3f33"}
   ],
   "cheeses": [
     {"id": "cheese", "name": "吉士片", "kcal": 46, "protein": 3, "fat": 4, "carb": 1, "sodium": 181, "source": "mcp-diff", "basis": "吉士汉堡包294 - 汉堡包248", "real": true},
-    {"id": "gouda", "name": "高达干酪片", "kcal": 60, "protein": 4, "fat": 5, "carb": 1, "sodium": 200, "source": "estimated", "basis": "参照吉士片", "real": true}
+    {"id": "gouda", "name": "高达干酪片", "kcal": 60, "protein": 4, "fat": 5, "carb": 1, "sodium": 200, "source": "estimated", "basis": "参照吉士片", "real": true},
+    {"id": "bluecheese", "name": "蓝纹芝士", "kcal": 90, "protein": 5, "fat": 7, "carb": 1, "sodium": 320, "source": "legend", "basis": "传说层：官方菜单无此物，热量按同类食材粗估，仅供构词", "color": "#9fb8c9"},
+    {"id": "cheesefall", "name": "芝士瀑布", "kcal": 160, "protein": 8, "fat": 12, "carb": 4, "sodium": 460, "source": "legend", "basis": "传说层：官方菜单无此物，热量按同类食材粗估，仅供构词", "color": "#f7c948"},
+    {"id": "mozzarella", "name": "马苏里拉球", "kcal": 120, "protein": 8, "fat": 8, "carb": 2, "sodium": 280, "source": "legend", "basis": "传说层：官方菜单无此物，热量按同类食材粗估，仅供构词", "color": "#fbf0d0"}
   ],
   "veggies": [
     {"id": "tomato", "name": "番茄片", "kcal": 5, "protein": 0.2, "fat": 0, "carb": 1, "sodium": 2, "source": "estimated", "basis": "常见蔬菜估值", "real": true},
@@ -43,7 +57,13 @@
     {"id": "pickle", "name": "酸黄瓜片", "kcal": 5, "protein": 0.1, "fat": 0, "carb": 1, "sodium": 120, "source": "estimated", "basis": "腌制蔬菜估值", "real": true},
     {"id": "onion", "name": "洋葱粒", "kcal": 5, "protein": 0.2, "fat": 0, "carb": 1, "sodium": 2, "source": "estimated", "basis": "常见蔬菜估值", "real": true},
     {"id": "avocado", "name": "牛油果片(创意)", "kcal": 40, "protein": 0.5, "fat": 4, "carb": 2, "sodium": 3, "source": "creative", "basis": "常见水果估值", "real": false},
-    {"id": "pineapple", "name": "夏威夷菠萝圈(创意)", "kcal": 25, "protein": 0.2, "fat": 0, "carb": 6, "sodium": 1, "source": "creative", "basis": "常见水果估值", "real": false}
+    {"id": "pineapple", "name": "夏威夷菠萝圈(创意)", "kcal": 25, "protein": 0.2, "fat": 0, "carb": 6, "sodium": 1, "source": "creative", "basis": "常见水果估值", "real": false},
+    {"id": "durian", "name": "榴莲果肉", "kcal": 150, "protein": 2, "fat": 5, "carb": 24, "sodium": 10, "source": "legend", "basis": "传说层：官方菜单无此物，热量按同类食材粗估，仅供构词", "color": "#e3c65b"},
+    {"id": "boba", "name": "黑糖珍珠", "kcal": 180, "protein": 1, "fat": 4, "carb": 36, "sodium": 20, "source": "legend", "basis": "传说层：官方菜单无此物，热量按同类食材粗估，仅供构词", "color": "#4a3b33"},
+    {"id": "nori", "name": "海苔脆片", "kcal": 10, "protein": 1, "fat": 0.2, "carb": 1, "sodium": 40, "source": "legend", "basis": "传说层：官方菜单无此物，热量按同类食材粗估，仅供构词", "color": "#3f5b3a"},
+    {"id": "kimchi", "name": "韩式泡菜", "kcal": 15, "protein": 1, "fat": 0.2, "carb": 2, "sodium": 300, "source": "legend", "basis": "传说层：官方菜单无此物，热量按同类食材粗估，仅供构词", "color": "#d9534f"},
+    {"id": "hashbrown", "name": "薯饼", "kcal": 150, "protein": 2, "fat": 9, "carb": 16, "sodium": 300, "source": "legend", "basis": "传说层：官方菜单无此物，热量按同类食材粗估，仅供构词", "color": "#d9a441"},
+    {"id": "strawberry", "name": "草莓", "kcal": 25, "protein": 0.5, "fat": 0.2, "carb": 6, "sodium": 2, "source": "legend", "basis": "传说层：官方菜单无此物，热量按同类食材粗估，仅供构词", "color": "#e05a6b"}
   ],
   "sauces": [
     {"id": "ketchup", "name": "番茄酱", "kcal": 15, "protein": 0.3, "fat": 0, "carb": 3.5, "sodium": 130, "source": "estimated", "basis": "常见酱料估值", "real": true},
@@ -57,7 +77,11 @@
     {"id": "mustardsalad", "name": "芥末沙拉酱", "kcal": 35, "protein": 0.3, "fat": 3.5, "carb": 1, "sodium": 160, "source": "estimated", "basis": "常见酱料估值", "real": true},
     {"id": "fishsauce", "name": "麦香鱼酱", "kcal": 35, "protein": 0.3, "fat": 3.4, "carb": 1.2, "sodium": 170, "source": "mcp-diff", "basis": "麦香鱼325 - 堡包120 - 鳕鱼排170", "real": true},
     {"id": "butter", "name": "黄油", "kcal": 35, "protein": 0, "fat": 4, "carb": 0, "sodium": 30, "source": "estimated", "basis": "常见油脂估值", "real": true},
-    {"id": "turkeysauce", "name": "火鸡面甜辣酱(创意)", "kcal": 40, "protein": 0.3, "fat": 0.5, "carb": 9, "sodium": 480, "source": "creative", "basis": "参照火鸡面酱包", "real": false}
+    {"id": "turkeysauce", "name": "火鸡面甜辣酱(创意)", "kcal": 40, "protein": 0.3, "fat": 0.5, "carb": 9, "sodium": 480, "source": "creative", "basis": "参照火鸡面酱包", "real": false},
+    {"id": "laoganma", "name": "老干妈", "kcal": 60, "protein": 1, "fat": 5.5, "carb": 2, "sodium": 380, "source": "legend", "basis": "传说层：官方菜单无此物，热量按同类食材粗估，仅供构词", "color": "#a5251c"},
+    {"id": "bobatea", "name": "珍珠奶茶酱", "kcal": 120, "protein": 1, "fat": 5, "carb": 18, "sodium": 40, "source": "legend", "basis": "传说层：官方菜单无此物，热量按同类食材粗估，仅供构词", "color": "#c39b6b"},
+    {"id": "tomyum", "name": "冬阴功酱", "kcal": 45, "protein": 1, "fat": 3, "carb": 3, "sodium": 420, "source": "legend", "basis": "传说层：官方菜单无此物，热量按同类食材粗估，仅供构词", "color": "#d97437"},
+    {"id": "honeymustard", "name": "蜂蜜芥末", "kcal": 70, "protein": 0.3, "fat": 5, "carb": 6, "sodium": 180, "source": "legend", "basis": "传说层：官方菜单无此物，热量按同类食材粗估，仅供构词", "color": "#e6b93c"}
   ],
   "realBurgers": [
     {"name": "巨无霸", "code": "1100", "officialKcal": 513, "source": "mcp-detail", "layers": ["sesame", "beef", "beef", "lettuce", "cheese", "pickle", "onion", "bigmacsauce"]},

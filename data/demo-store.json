@@ -1,0 +1,36 @@
+{
+  "capturedAt": "2026-10-21",
+  "city": "深圳市",
+  "keyword": "南山",
+  "note": "真实门店同步结果的只读快照，用于本地代理未启动时演示；不含任何凭证。",
+  "ok": true,
+  "storeName": "麦当劳深圳桂庙路餐厅",
+  "storeCode": "1420207",
+  "burgers": 14,
+  "onSaleReal": [
+    "不素之霸双层牛堡",
+    "双层吉士汉堡",
+    "双层深海鳕鱼堡",
+    "培根安格斯厚牛堡",
+    "培根蔬萃双层牛堡",
+    "巨无霸",
+    "板烧鸡腿堡",
+    "芝士安格斯厚牛堡",
+    "高达吉士双牛堡",
+    "麦辣鸡腿汉堡",
+    "麦香鱼",
+    "麦香鸡",
+    "龙焰芝士棒鸡腿堡",
+    "龙焰鸡腿堡"
+  ],
+  "unlisted": [],
+  "soldOut": [
+    "blackbun",
+    "ricebun",
+    "shrimp",
+    "turkeynoodle",
+    "avocado",
+    "pineapple",
+    "turkeysauce"
+  ]
+}

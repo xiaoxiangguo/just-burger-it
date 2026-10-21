@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>麦门汉堡搭建器 · 定制专属于你的麦门汉堡🍔</title>
+<title>麦门之搭了个堡 · 定制专属于你的麦门汉堡🍔</title>
 <style>
   :root {
     --ink: #241c18;
@@ -13,6 +13,7 @@
     --yellow: #f5b21f;
     --green: #5a9e4b;
     --blue: #3d7ea6;
+    --purple: #7c5cff;
     --muted: #8b7862;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -68,6 +69,9 @@
   .sim-chip { display: inline-block; font-size: 10.5px; font-weight: 700; border-radius: 999px; padding: 1px 7px; margin-left: 6px; vertical-align: 1px; }
   .sim-chip.on { background: #e6f3dc; color: #3f7a2e; border: 1.5px solid #5a9e4b; }
   .sim-chip.off { background: #f4ece1; color: #9c8b76; border: 1.5px dashed #bbaa93; }
+  .sim-orig { display: flex; align-items: baseline; justify-content: center; gap: 7px; margin: 2px 0 3px; }
+  .sim-orig b { font-size: 32px; line-height: 1; color: var(--purple); letter-spacing: -1px; }
+  .sim-orig span { font-size: 11px; color: var(--muted); font-weight: 800; letter-spacing: 2px; }
 
   /* ===== nutrition hero ===== */
   .hero {
@@ -162,12 +166,53 @@
   #shareCanvas { max-width: 100%; border: 2.5px solid var(--ink); border-radius: 12px; background: #fff; }
   .source-note { font-size: 11px; color: #9c8b76; line-height: 1.75; }
   .source-note b { color: #6b5844; }
+
+  /* ===== 作品名 + 人格 ===== */
+  #buildName { margin: 2px 0 4px; text-align: center; line-height: 1.25; }
+  #buildName .title {
+    display: inline-block; font-size: 22px; font-weight: 900; letter-spacing: 1px;
+    color: var(--ink); text-shadow: 2px 2px 0 #ffe9a8;
+  }
+  #buildName .chip {
+    display: inline-block; margin-left: 8px; vertical-align: 3px;
+    font-size: 11px; font-weight: 800; color: #fff; background: var(--purple);
+    border: 2px solid var(--ink); border-radius: 999px; padding: 1px 9px;
+  }
+
+  /* ===== 荒诞档案 ===== */
+  .case-file {
+    margin-top: 12px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px;
+    border-top: 2px dashed #e6d7c0; padding-top: 10px;
+  }
+  .case-file div { text-align: center; font-size: 11px; color: var(--muted); line-height: 1.5; }
+  .case-file b { display: block; font-size: 14.5px; color: var(--ink); letter-spacing: .5px; }
+  .case-file .danger b { color: var(--purple); letter-spacing: 1px; }
+
+  /* ===== 传说 / 自定义 ===== */
+  .item.legend { background: #f8f4ff; border-style: dashed; }
+  .item .badge.legend { background: var(--purple); }
+  .custom-row { display: flex; gap: 6px; margin-top: 9px; }
+  .custom-row input {
+    flex: 1; min-width: 0; padding: 8px 10px; font-size: 12.5px; font-family: inherit;
+    border: 2.5px dashed #c9b7a0; border-radius: 10px; background: #fffdf8;
+  }
+  .custom-row input:focus { outline: none; border-color: var(--purple); }
+  .custom-row select {
+    padding: 8px 6px; font-size: 12px; font-family: inherit; font-weight: 700;
+    border: 2.5px solid var(--ink); border-radius: 10px; background: #fff;
+  }
+  .custom-row button {
+    padding: 8px 12px; font-size: 12.5px; font-weight: 800; font-family: inherit;
+    border: 2.5px solid var(--ink); border-radius: 10px; background: var(--purple);
+    color: #fff; cursor: pointer; white-space: nowrap;
+  }
+  .custom-row button:active { transform: translate(1px,1px); }
 </style>
 </head>
 <body>
 <header>
   <div class="kicker">MCD BURGER BUILDER · 1024</div>
-  <h1>麦门<em>汉堡搭建器</em></h1>
+  <h1>麦门之<em>搭了个堡</em></h1>
   <p class="slogan">定制专属于你的麦门汉堡🍔</p>
 </header>
 
@@ -175,6 +220,7 @@
   <!-- ================= 左：汉堡舞台 ================= -->
   <div class="panel" id="stage">
     <div class="panel-title">你的作品 YOUR BUILD</div>
+    <div id="buildName"></div>
     <div id="burgerSvg"></div>
     <div id="similarity"></div>
   </div>
@@ -220,12 +266,25 @@
         <span class="pill" id="sodiumVal">0 mg 钠</span>
         <span id="sodiumMsg">钠含量在舒适范围内</span>
       </div>
+      <div class="case-file" id="caseFile"></div>
     </div>
 
     <div class="panel" style="margin-top:16px">
       <div class="panel-title">选食材 INGREDIENTS</div>
       <div class="tabs" id="tabs"></div>
       <div class="items" id="items"></div>
+      <div class="custom-row">
+        <input id="customName" placeholder="报个菜名，例如：榴莲" maxlength="12"
+               onkeydown="if(event.key==='Enter')addCustom()">
+        <select id="customCat">
+          <option value="patty">肉层</option>
+          <option value="bun">面包</option>
+          <option value="cheese">芝士</option>
+          <option value="veg">蔬菜</option>
+          <option value="sauce">酱料</option>
+        </select>
+        <button onclick="addCustom()">＋ 加一层</button>
+      </div>
 
       <div class="panel-title" style="margin-top:16px">当前结构 LAYERS</div>
       <div class="stack" id="stack"></div>
@@ -233,7 +292,7 @@
       <div class="actions">
         <button class="btn ghost" onclick="randomize()">🎲 乱搭</button>
         <button class="btn ghost" onclick="reset()">清空</button>
-        <button class="btn primary" onclick="openShare()">📸 出餐卡</button>
+        <button class="btn primary" onclick="openShare()">🙏 许愿卡</button>
       </div>
     </div>
 
@@ -254,6 +313,7 @@
         · <b>官方差值</b>（绿）：官方营养表两个真实餐品的差，如「双层吉士汉堡 429 − 吉士汉堡包 294 = 牛肉饼 135 kcal」<br>
         · <b>推算</b>（蓝）：以官方数据为锚的估算，误差约 ±20%<br>
         · <b>创意</b>（红）：官方暂无对应产品（火鸡面肉饼、鲜虾排…），就当许愿<br>
+        · <b>传说</b>（紫）：官方和现实中都不存在的东西（榴莲、螺蛳粉、整只龙虾…），热量按同类食材粗估<br>
         · 数据源：麦当劳中国 MCP Server（list-nutrition-foods / query-meals / query-meal-detail），快照 2026-10-21
       </div>
     </div>
@@ -261,14 +321,14 @@
 </main>
 
 <footer>
-  麦门汉堡搭建器 · 定制专属于你的麦门汉堡🍔<br>
+  麦门之搭了个堡 · 定制专属于你的麦门汉堡🍔<br>
   麦当劳程序员创意开发大赛参赛作品 · 非官方出品 · 数据来自麦当劳中国 MCP 公开接口
 </footer>
 
 <div id="modal">
   <div class="box">
-    <h3>🖼️ 你的专属出餐卡</h3>
-    <div class="sub">起个名字，让它成为麦门传说</div>
+    <h3>🙏 你的专属许愿卡</h3>
+    <div class="sub">留个名字，让它成为麦门传说</div>
     <input id="burgerName" placeholder="例：火鸡面安格斯巨兽堡" maxlength="20">
     <canvas id="shareCanvas" width="900" height="1160"></canvas>
     <div class="actions" style="grid-template-columns: 1fr 1fr; margin-top:12px">
@@ -284,12 +344,13 @@
     <div class="sub" style="line-height:1.7; text-align:left; margin-top:8px">
       输入你自己的麦当劳 MCP Token 与城市，应用会实时调用<br>
       <code>query-nearby-stores → query-meals → query-meal-detail</code><br>
-      拉取当前门店真实在售的汉堡与配料，门店没有的食材会被标记售罄。
+      拉取当前门店真实在售的汉堡与配料，门店没有的食材会被标记售罄。<br>
+      <b>没有 Token？留空直接点「开始同步」，可载入演示门店快照。</b>
     </div>
     <input id="liveToken" placeholder="MCP Token（仅本机内存，不上传）">
     <input id="liveCity" placeholder="城市，如：深圳市" value="深圳市">
     <input id="liveKeyword" placeholder="商圈关键词，如：南山" value="南山">
-    <div id="liveStatus" style="font-size:12px;color:#8b7862;margin:4px 0 8px">可用本地代理：默认 http://127.0.0.1:8787</div>
+    <div id="liveStatus" style="font-size:12px;color:#8b7862;margin:4px 0 8px">本地代理：http://127.0.0.1:8787（未启动时自动改用演示快照）</div>
     <div class="actions" style="grid-template-columns: 1fr 1fr">
       <button class="btn ghost" onclick="closeLive()">取消</button>
       <button class="btn primary" onclick="doLive()">开始同步</button>
@@ -309,6 +370,7 @@ const SOURCE_TAG = {
   "mcp-diff": { label: "官方差值", color: "#5a9e4b" },
   "estimated": { label: "推算", color: "#3d7ea6" },
   "creative": { label: "创意", color: "#e0452a" },
+  "legend": { label: "传说", color: "#7c5cff" },
 };
 const TYPE_KEY = { bun: "buns", patty: "patties", cheese: "cheeses", veg: "veggies", sauce: "sauces" };
 const W = 380;
@@ -346,10 +408,12 @@ function renderTabs() {
 function setCat(k) { activeCat = k; renderTabs(); renderItems(); }
 function renderItems() {
   document.getElementById("items").innerHTML = DATA.byType[activeCat].map(it => {
-    const tag = SOURCE_TAG[it.source];
+    const tag = SOURCE_TAG[it.source] || SOURCE_TAG.estimated;
     const out = soldOut.has(it.id);
-    return `<div class="item" onclick="${out ? "" : `addItem('${it.id}','${it.cat}')`}" style="${out ? "opacity:.42;cursor:not-allowed" : ""}">
-      ${it.source === "creative" ? `<span class="badge">创意</span>` : ""}
+    const mark = it.source === "legend" ? `<span class="badge legend">传说</span>`
+      : it.source === "creative" ? `<span class="badge">创意</span>` : "";
+    return `<div class="item ${it.source === "legend" ? "legend" : ""}" onclick="${out ? "" : `addItem('${it.id}','${it.cat}')`}" style="${out ? "opacity:.42;cursor:not-allowed" : ""}">
+      ${mark}
       <span class="n">${it.name}</span>
       <span class="k">${out ? "本店暂未售" : Math.round(it.kcal) + " kcal · " + tag.label}</span>
     </div>`;
@@ -439,6 +503,105 @@ function renderNutrition() {
     : `约为每日建议上限的 ${Math.round(t.sodium / 2000 * 100)}%`;
 }
 
+/* ---------------- 命名 / 人格 / 荒诞档案 ---------------- */
+const NAME_PREFIX = ["深渊", "混沌", "熔岩", "星尘", "量子", "禁忌", "午夜", "赛博",
+  "黄金", "反叛", "终极", "幽灵", "极光", "钢铁", "彩虹", "暴走", "失重", "霓虹", "陨石", "海市蜃楼"];
+
+function hashStr(s) {
+  let h = 2166136261 >>> 0;
+  for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; }
+  return h;
+}
+function signature() { return stack.map(s => s.item.id).sort().join("|") + "#" + stack.length; }
+function shortName(n) {
+  const cut = n.replace(/[（(].*?[)）]/g, "")
+    .replace(/^(整只|双份|超大|特厚)/, "")
+    .replace(/(果肉|厚切|肉饼|肉排|鸡排|片|排|饼|酱|粒|球|丝|块|圈|包|肉)$/, "");
+  return cut || n;
+}
+function autoName() {
+  if (!stack.length) return "空盘待装";
+  const h = hashStr(signature());
+  const core = [...stack].filter(s => s.cat !== "bun").sort((a, b) => b.item.kcal - a.item.kcal)[0] || stack[0];
+  const tail = stack.length >= 8 ? "之塔" : stack.length >= 5 ? "巨堡" : "堡";
+  return NAME_PREFIX[h % NAME_PREFIX.length] + shortName(core.item.name) + tail;
+}
+
+const PERSONA_RULES = [
+  ["嗜辣狂徒", s => s.filter(x => ["chilibutter", "turkeysauce", "dragonchicken", "turkeynoodle",
+    "kimchi", "tomyum", "laoganma", "malahotpot", "luosifen"].includes(x.item.id)).length * 2],
+  ["芝士信徒", s => s.filter(x => x.cat === "cheese").length * 2],
+  ["甜咸党", s => s.filter(x => ["pineapple", "durian", "boba", "strawberry", "bobatea", "honeymustard"].includes(x.item.id)).length * 2],
+  ["无肉不欢", s => s.filter(x => x.cat === "patty").length],
+  ["养生朋克", s => s.filter(x => x.cat === "veg").length],
+  ["酱料炼金术士", s => s.filter(x => x.cat === "sauce").length],
+];
+function persona() {
+  if (!stack.length) return "等待投喂";
+  let best = "", score = 0;
+  for (const [name, fn] of PERSONA_RULES) { const v = fn(stack); if (v > score) { score = v; best = name; } }
+  return best || "随性选手";
+}
+
+function caseStats() {
+  const kcal = Math.round(totals().kcal);
+  return {
+    kcal,
+    danger: Math.max(1, Math.min(5, Math.round(kcal / 330))),
+    rice: (kcal / 230).toFixed(1),
+    km: (kcal / 60).toFixed(1),
+  };
+}
+function renderBuildName() {
+  const el = document.getElementById("buildName");
+  if (!el) return;
+  el.innerHTML = stack.length
+    ? `<span class="title">${autoName()}</span><span class="chip">${persona()}</span>`
+    : `<span class="title">空盘待装</span>`;
+}
+function renderCaseFile() {
+  const el = document.getElementById("caseFile");
+  if (!el) return;
+  if (!stack.length) { el.innerHTML = ""; return; }
+  const c = caseStats();
+  el.innerHTML = `
+    <div class="danger"><b>${"★".repeat(c.danger)}${"☆".repeat(5 - c.danger)}</b>危险等级</div>
+    <div><b>${c.rice} 碗</b>相当于米饭</div>
+    <div><b>${c.km} km</b>要跑多远</div>`;
+}
+
+/* ---------------- 自定义食材（报菜名） ---------------- */
+const CUSTOM_BASE = {
+  bun:    { kcal: 160, protein: 5,   fat: 4,  carb: 28, sodium: 320 },
+  patty:  { kcal: 240, protein: 14,  fat: 16, carb: 8,  sodium: 520 },
+  cheese: { kcal: 110, protein: 7,   fat: 8,  carb: 3,  sodium: 340 },
+  veg:    { kcal: 45,  protein: 1,   fat: 1,  carb: 8,  sodium: 60  },
+  sauce:  { kcal: 65,  protein: 0.5, fat: 5,  carb: 4,  sodium: 260 },
+};
+const CUSTOM_COLORS = ["#7c5cff", "#ec4899", "#0ea5a4", "#f59e0b", "#6366f1"];
+let customSeq = 0;
+function addCustom() {
+  const input = document.getElementById("customName");
+  const raw = input.value.trim();
+  const cat = document.getElementById("customCat").value;
+  if (!raw) { flash("先报个菜名"); return; }
+  const meta = CATS.find(c => c.key === cat);
+  if (stack.filter(s => s.cat === cat).length >= meta.limit) { flash(`${meta.label}最多 ${meta.limit} 层`); return; }
+  const base = CUSTOM_BASE[cat];
+  const item = {
+    id: "my" + (++customSeq) + "-" + hashStr(raw + cat).toString(36),
+    name: raw, cat, kcal: base.kcal, protein: base.protein, fat: base.fat,
+    carb: base.carb, sodium: base.sodium, source: "legend", custom: true,
+    color: CUSTOM_COLORS[hashStr(raw) % CUSTOM_COLORS.length],
+  };
+  DATA.byType[cat].push(item);
+  DATA.nameOf[item.id] = raw;
+  DATA.wOf[item.id] = SIM_WEIGHT[cat] || 1;
+  stack.push({ cat, item });
+  input.value = "";
+  renderItems(); renderStack(); renderBurger(); renderNutrition();
+}
+
 /* ---------------- similarity（按层计数 + 分类加权） ---------------- */
 const SIM_MIN = 0.40;   // 低于此分数不再声称“官方最接近”，显示为原创
 const SIM_TOP = 3;      // 展示候选数
@@ -495,11 +658,48 @@ function sesame(cx, y, w) {
   ).join("");
 }
 
+function sparkle(cx, cy, spread) {
+  const pts = [[-0.34, -6], [-0.08, 4], [0.2, -3], [0.4, 5], [-0.22, 9], [0.1, 12]];
+  return pts.map(([fx, fy]) => {
+    const x = cx + fx * spread, yy = cy + fy;
+    return `<path d="M ${x} ${yy - 5} l 1.6 3.4 3.4 1.6 -3.4 1.6 -1.6 3.4 -1.6 -3.4 -3.4 -1.6 3.4 -1.6 Z" fill="#fff" opacity=".88"/>`;
+  }).join("");
+}
+
+// 传说层：官方不存在的东西，统一画成「虚线 + 星点」的异质层
+function legendLayer(s, y, isTop) {
+  const cx = W / 2, fill = s.item.color || "#7c5cff";
+  const dash = `stroke="${INK}" stroke-width="4" stroke-dasharray="10 7" stroke-linejoin="round" stroke-linecap="round"`;
+  if (s.cat === "bun" && isTop) {
+    return { h: 56, svg: `<g>
+      <path d="M ${cx - 158} ${y + 52} C ${cx - 158} ${y + 6} ${cx - 82} ${y - 8} ${cx} ${y - 8}
+               C ${cx + 82} ${y - 8} ${cx + 158} ${y + 6} ${cx + 158} ${y + 52} q -158 14 -316 0 Z" fill="${fill}" ${dash}/>
+      <path d="M ${cx - 120} ${y + 18} C ${cx - 96} ${y + 2} ${cx - 40} ${y - 2} ${cx + 4} ${y + 4}" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="7" stroke-linecap="round"/>
+      ${sparkle(cx, y + 26, 118)}
+    </g>` };
+  }
+  if (s.cat === "bun") {
+    return { h: 38, svg: `<g>
+      <path d="M ${cx - 158} ${y + 8} q 158 -12 316 0 l 0 22 q -158 12 -316 0 Z" fill="${fill}" ${dash}/>
+      ${sparkle(cx, y + 18, 108)}
+    </g>` };
+  }
+  const half = 156;
+  return { h: 40, svg: `<g>
+    <path d="M ${cx - half} ${y + 18} q 0 -16 18 -16 l ${half * 2 - 36} 0 q 18 0 18 16
+             l 0 12 q 0 14 -16 14 l -${half * 2 - 32} 0 q -16 0 -16 -14 Z" fill="${fill}" ${dash}/>
+    <path d="M ${cx - half + 24} ${y + 12} q ${half - 24} 10 ${half * 2 - 48} 0" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="3.4"/>
+    ${sparkle(cx, y + 21, 128)}
+  </g>` };
+}
+
 function layerSvg(s, y) {
   const cx = W / 2;
   const S = `stroke="${INK}" stroke-width="4.2" stroke-linejoin="round" stroke-linecap="round"`;
   const T = `stroke="${INK}" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"`;
   const id = s.item.id, cat = s.cat;
+
+  if (s.item.source === "legend") return legendLayer(s, y, false);
 
   if (cat === "bun") {
     if (y === 0) return null; // handled by caller
@@ -597,31 +797,62 @@ function layerSvg(s, y) {
       </g>` };
     }
     if (id === "choppedlettuce") {
-      // 切块生菜：细碎叶丝，短小密集
-      let curls = "";
-      for (let i = 0; i < 11; i++) {
-        const x = cx - 140 + i * 28;
-        const lean = ((i % 3) - 1) * 9;
-        curls += `<path d="M ${x} ${y + 27} q 5 -11 13 -14 q -2 9 1 14 Z"
-          fill="${i % 2 ? "#8cc766" : "#79b957"}" ${T}
-          transform="rotate(${lean} ${x} ${y + 27})"/>`;
+      // 切块生菜：蓬松的碎叶堆——云朵状叶堆打底，顶部撒圆角碎叶块 + 几缕短圆头叶丝
+      const tones = ["#8cc766", "#79b957", "#6cae4d"];
+      let strands = "";
+      [[17, [-136, -104, -70, -36, -2, 32, 66, 100, 132], 6.6]].forEach(([by, xs, w], ri) => {
+        xs.forEach((dx, i) => {
+          const x = cx + dx;
+          const len = 8 + ((i * 4 + ri * 3) % 7);
+          const bend = i % 2 ? 6 : -6;
+          strands += `<path d="M ${x} ${y + by} q ${bend} ${-len / 2} ${bend * 2} ${-len}"
+            fill="none" stroke="${tones[(i + ri) % 3]}" stroke-width="${w}" stroke-linecap="round"/>`;
+        });
+      });
+      // 圆角碎叶块：散落在叶堆顶部，旋转错落
+      let bits = "";
+      for (let i = 0; i < 12; i++) {
+        const x = cx - 132 + i * 24 + ((i * 7) % 3) * 4;
+        const yy = y + 7 + (i % 3) * 3;
+        const bw = 11 + ((i * 5) % 5);
+        bits += `<rect x="${x - bw / 2}" y="${yy}" width="${bw}" height="4.6" rx="2.3"
+          fill="${tones[(i + 1) % 3]}" transform="rotate(${((i * 37) % 26) - 13} ${x} ${yy + 2.3})"/>`;
       }
-      return { h: 35, svg: `<g>
-        <rect x="${cx - 150}" y="${y + 21}" width="300" height="13" rx="6.5" fill="#5f9e46" ${S}/>
-        ${curls}
+      // 云朵状叶堆：顶部平滑起伏，接缝处水平切线
+      const lobes = 6, hw = 150, step = (hw * 2) / lobes;
+      let d = `M ${cx - hw} ${y + 18}`;
+      for (let i = 0; i < lobes; i++) {
+        const x0 = cx - hw + i * step;
+        d += ` C ${x0 + step * 0.3} ${y + 10}, ${x0 + step * 0.7} ${y + 10}, ${x0 + step} ${y + 18}`;
+      }
+      d += ` l 0 10 q -${hw} 9 -${hw * 2} 0 Z`;
+      return { h: 34, svg: `<g>${strands}${bits}
+        <path d="${d}" fill="#5f9e46" ${S}/>
+        <path d="M ${cx - 118} ${y + 24} q 60 -7 120 -3" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="3" stroke-linecap="round"/>
       </g>` };
     }
-    // 整片生菜：三片大波浪叶面
+    // 整片生菜：两层柔和的荷叶边叶面，端点保持水平切线，接缝处不会出现尖角；
+    // 前后两层波峰数互质（3/5），波谷不会对齐露出底色
     {
-      const hw = 162, n = 3, step = (hw * 2) / n;
-      let d = `M ${cx - hw} ${y + 21}`;
-      for (let i = 0; i < n; i++) d += ` q ${step / 2} ${i % 2 ? -25 : -17} ${step} 0`;
-      d += ` l 0 10 q -${hw} 9 -${hw * 2} 0 Z`;
+      // deep：额外加深下缘，保证前层在任何位置都盖住后层的上缘，不留缝隙
+      const band = (yy, hw, amp, lobes, deep = 0) => {
+        const step = (hw * 2) / lobes;
+        let d = `M ${cx - hw} ${yy}`;
+        for (let i = 0; i < lobes; i++) {
+          const x0 = cx - hw + i * step, dir = i % 2 ? -1 : 1;
+          d += ` C ${(x0 + step * 0.28).toFixed(1)} ${yy - amp * dir},`
+             + ` ${(x0 + step * 0.72).toFixed(1)} ${yy - amp * dir},`
+             + ` ${(x0 + step).toFixed(1)} ${yy}`;
+        }
+        d += ` l 0 ${12 + deep} q -${hw} ${10 + deep} -${hw * 2} 0 Z`;
+        return d;
+      };
       return { h: 34, svg: `<g>
-        <path d="${d}" fill="#6cb052" ${S}/>
-        <path d="M ${cx - 118} ${y + 14} q 46 -14 94 -5" fill="none" stroke="#4d8738" stroke-width="3.4"/>
-        <path d="M ${cx + 6} ${y + 16} q 50 -14 102 -3" fill="none" stroke="#4d8738" stroke-width="3.4"/>
-        <path d="M ${cx - 62} ${y + 24} q 24 -8 52 -3" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="3"/>
+        <path d="${band(y + 5, 158, 14, 5)}" fill="#5f9e46" ${S}/>
+        <path d="${band(y, 146, 12, 3, 6)}" fill="#7cb85a" ${S}/>
+        <path d="M ${cx - 94} ${y + 9} q 34 -9 70 -2" fill="none" stroke="#4d8738" stroke-width="3.2" stroke-linecap="round"/>
+        <path d="M ${cx + 6} ${y + 11} q 36 -9 74 -1" fill="none" stroke="#4d8738" stroke-width="3.2" stroke-linecap="round"/>
+        <path d="M ${cx - 50} ${y + 5} q 24 -7 50 -2" fill="none" stroke="rgba(255,255,255,.45)" stroke-width="3" stroke-linecap="round"/>
       </g>` };
     }
   }
@@ -654,7 +885,7 @@ function renderBurger() {
     return 44;
   };
   const bodyH = rest.reduce((a, s) => a + layerH(s), 0);
-  const topH = bun ? 96 : 0, bottomH = bun ? 38 : 0;
+  const topH = bun ? (bun.item.source === "legend" ? 78 : 96) : 0, bottomH = bun ? 38 : 0;
   const H = Math.max(260, 46 + topH + bodyH + bottomH + 54);
   let y = 42, out = "";
   out += `<svg id="burgerSvgEl" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">`;
@@ -669,16 +900,21 @@ function renderBurger() {
   </g>`;
   // 顶部堡冠
   if (bun) {
-    const cx = W / 2;
-    out += `<g>
-      <path d="M ${cx - 168} ${y + 74} C ${cx - 168} ${y - 4} ${cx - 84} ${y - 28} ${cx} ${y - 28}
-               C ${cx + 84} ${y - 28} ${cx + 168} ${y - 4} ${cx + 168} ${y + 74}
-               q -168 16 -336 0 Z" fill="${LOOK.bun.top.fill}" ${`stroke="${INK}" stroke-width="4.2" stroke-linejoin="round"`}/>
-      <path d="M ${cx - 150} ${y + 22} C ${cx - 132} ${y - 8} ${cx - 72} ${y - 22} ${cx} ${y - 22}" fill="none" stroke="rgba(255,255,255,.42)" stroke-width="9" stroke-linecap="round"/>
-      ${sesame(cx, y, 300)}
-      <path d="M ${cx - 168} ${y + 66} q 168 16 336 0" fill="none" stroke="rgba(120,70,20,.3)" stroke-width="3.4"/>
-    </g>`;
-    y += 74;
+    if (bun.item.source === "legend") {
+      const r = legendLayer({ cat: "bun", item: bun.item }, y, true);
+      out += r.svg; y += r.h - 6;
+    } else {
+      const cx = W / 2;
+      out += `<g>
+        <path d="M ${cx - 168} ${y + 74} C ${cx - 168} ${y - 4} ${cx - 84} ${y - 28} ${cx} ${y - 28}
+                 C ${cx + 84} ${y - 28} ${cx + 168} ${y - 4} ${cx + 168} ${y + 74}
+                 q -168 16 -336 0 Z" fill="${LOOK.bun.top.fill}" ${`stroke="${INK}" stroke-width="4.2" stroke-linejoin="round"`}/>
+        <path d="M ${cx - 150} ${y + 22} C ${cx - 132} ${y - 8} ${cx - 72} ${y - 22} ${cx} ${y - 22}" fill="none" stroke="rgba(255,255,255,.42)" stroke-width="9" stroke-linecap="round"/>
+        ${sesame(cx, y, 300)}
+        <path d="M ${cx - 168} ${y + 66} q 168 16 336 0" fill="none" stroke="rgba(120,70,20,.3)" stroke-width="3.4"/>
+      </g>`;
+      y += 74;
+    }
   }
   // 中间层（后加的在上面）
   for (let i = rest.length - 1; i >= 0; i--) {
@@ -692,30 +928,55 @@ function renderBurger() {
 
   const sim = similarity();
   const simBox = document.getElementById("similarity");
-  if (!sim || !sim.top.length) {
+  if (!stack.length) {
     simBox.innerHTML = `<span style="color:#b3a28c">还没有食材，先从下面加一层肉</span>`;
+  } else if (!sim || !sim.top.length) {
+    // 有食材，但与任何官方产品零交集
+    simBox.innerHTML = `<div class="sim-orig"><b>100%</b><span>原创度</span></div>
+      <div class="sim-lead none">官方 16 款里没有一层对得上 · 纯原创</div>
+      <div class="sim-rest">这已经不是麦门，是同人作品</div>`;
   } else {
     const pc = x => Math.round(x.score * 100);
-    const [a, ...rest] = sim.top;
+    const [a, ...others] = sim.top;
     const chip = x => x.onSale === null ? ""
       : x.onSale ? `<span class="sim-chip on">本店在售</span>`
                  : `<span class="sim-chip off">本店不售</span>`;
-    const restLine = rest.length
-      ? `<div class="sim-rest">次选：${rest.map(x => `${x.name} <b>${pc(x)}%</b>${chip(x)}`).join(" · ")}</div>`
+    const restLine = others.length
+      ? `<div class="sim-rest">次选：${others.map(x => `${x.name} <b>${pc(x)}%</b>${chip(x)}`).join(" · ")}</div>`
       : "";
-    const gapLine = a.missing.length
-      ? `<div class="sim-gap">再补 ${a.missing.length} 层就是它：${a.missing.slice(0, 3).map(m => DATA.nameOf[m.id] || m.id).join("、")}${a.missing.length > 3 ? " 等" : ""}</div>`
-      : `<div class="sim-gap exact">配方完全一致 ✓</div>`;
-    simBox.innerHTML = sim.confident
-      ? `<div class="sim-lead">官方最接近产品：<span class="name">${a.name}</span><b>${pc(a)}%</b>${chip(a)}</div>${gapLine}${restLine}`
-      : `<div class="sim-lead none">你这颗是原创 🎉</div>
-         <div class="sim-rest">最接近的也只有 ${a.name} ${pc(a)}%，差得有点远</div>`;
+    const gapTotal = a.missing.reduce((n, m) => n + (m.gap || 1), 0);
+    if (sim.confident) {
+      const gapLine = a.missing.length
+        ? `<div class="sim-gap">再补 ${gapTotal} 层就是它：${a.missing.slice(0, 3).map(m => DATA.nameOf[m.id] || m.id).join("、")}${a.missing.length > 3 ? " 等" : ""}</div>`
+        : `<div class="sim-gap exact">配方完全一致 ✓ 官方看了会沉默</div>`;
+      simBox.innerHTML = `<div class="sim-lead">复刻成立：<span class="name">${a.name}</span><b>${pc(a)}%</b>${chip(a)}</div>${gapLine}${restLine}`;
+    } else {
+      simBox.innerHTML = `<div class="sim-orig"><b>${100 - pc(a)}%</b><span>原创度</span></div>
+        <div class="sim-lead none">菜单上不存在这一款 · 你是第一个点的</div>
+        <div class="sim-rest">官方离你最近的 <b>${a.name}</b> 也才 ${pc(a)}%，差 ${gapTotal} 层${chip(a)}</div>`;
+    }
   }
+  renderBuildName();
+  renderCaseFile();
 }
 
 /* ---------------- share card ---------------- */
+function wishNo() { return String(hashStr(signature() || "empty") % 9000 + 1000); }
+function wishLine() {
+  const lines = [
+    "求上架，我可以每天吃",
+    "这一口，值得为它排队",
+    "麦当劳，你听见了吗",
+    "不量产我就自己复刻",
+    "建议列入 1024 限定",
+    "先给我留一个名额",
+  ];
+  return lines[hashStr(signature() || "empty") % lines.length];
+}
 function openShare() {
-  if (!stack.length) { flash("先搭一颗汉堡再出餐"); return; }
+  if (!stack.length) { flash("先搭一颗汉堡再许愿"); return; }
+  const inp = document.getElementById("burgerName");
+  inp.placeholder = autoName();
   document.getElementById("modal").classList.add("show");
   drawCard();
 }
@@ -735,9 +996,11 @@ function wrapText(ctx, text, x, y, maxW, lh) {
   ctx.fillText(line, x, yy);
 }
 function drawCard() {
-  const name = document.getElementById("burgerName").value.trim() || "无名麦门堡";
+  const name = document.getElementById("burgerName").value.trim() || autoName();
   const t = totals();
   const sim = similarity();
+  const c = caseStats();
+  const no = wishNo();
   const canvas = document.getElementById("shareCanvas");
   const ctx = canvas.getContext("2d");
   const CW = canvas.width, CH = canvas.height;
@@ -748,52 +1011,83 @@ function drawCard() {
 
   ctx.textAlign = "center"; ctx.fillStyle = INK;
   ctx.font = "800 26px 'PingFang SC', sans-serif";
-  ctx.fillText("麦门汉堡搭建器 · 出餐凭证", CW / 2, 92);
+  ctx.fillText("麦门之搭了个堡 · 许愿凭证", CW / 2, 84);
   ctx.font = "400 17px 'PingFang SC', sans-serif"; ctx.fillStyle = "#8b7862";
-  ctx.fillText("定制专属于你的麦门汉堡🍔", CW / 2, 122);
+  ctx.fillText("定制专属于你的麦门汉堡🍔", CW / 2, 112);
+  ctx.font = "700 15px 'PingFang SC', sans-serif"; ctx.fillStyle = "#a4927c";
+  ctx.fillText(`NO.${no}  ·  配方专利号 MCD-1024-${no}  ·  危险等级 ${"★".repeat(c.danger)}${"☆".repeat(5 - c.danger)}`, CW / 2, 142);
 
-  ctx.font = "900 54px 'PingFang SC', sans-serif"; ctx.fillStyle = "#e0452a";
-  ctx.fillText(name, CW / 2, 190);
+  ctx.font = "900 52px 'PingFang SC', sans-serif"; ctx.fillStyle = "#e0452a";
+  ctx.fillText(name, CW / 2, 200);
 
   const svgEl = document.getElementById("burgerSvgEl");
   const img = new Image();
   img.onload = () => {
-    const iw = 540, ih = iw * (img.height / img.width);
-    ctx.drawImage(img, (CW - iw) / 2, 214, iw, ih);
-    const y0 = Math.max(760, 214 + ih + 24);
+    let iw = 540, ih = iw * (img.height / img.width);
+    if (ih > 420) { ih = 420; iw = ih * (img.width / img.height); }
+    const top = 222;
+    ctx.drawImage(img, (CW - iw) / 2, top, iw, ih);
+    const y0 = Math.max(690, top + ih + 18);
+
     // 热量主视觉
     ctx.textAlign = "left";
     ctx.fillStyle = "#fff6e2"; ctx.strokeStyle = INK; ctx.lineWidth = 5;
-    roundRect(ctx, 60, y0, CW - 120, 132, 16); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = INK; ctx.font = "900 64px 'PingFang SC', sans-serif";
-    ctx.fillText(String(Math.round(t.kcal)), 92, y0 + 84);
-    ctx.font = "700 20px 'PingFang SC', sans-serif"; ctx.fillStyle = "#8b7862";
-    ctx.fillText("KCAL", 92, y0 + 112);
-    ctx.fillStyle = "#e0452a"; ctx.font = "800 26px 'PingFang SC', sans-serif";
-    ctx.fillText(`每日推荐 ${Math.round(t.kcal / 2000 * 100)}%`, 300, y0 + 56);
-    ctx.fillStyle = INK; ctx.font = "600 20px 'PingFang SC', sans-serif";
-    ctx.fillText(`蛋白 ${t.protein.toFixed(1)}g · 脂肪 ${t.fat.toFixed(1)}g`, 300, y0 + 88);
-    ctx.fillText(`碳水 ${t.carb.toFixed(1)}g · 钠 ${Math.round(t.sodium)}mg`, 300, y0 + 116);
+    roundRect(ctx, 60, y0, CW - 120, 118, 16); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = INK; ctx.font = "900 58px 'PingFang SC', sans-serif";
+    ctx.fillText(String(Math.round(t.kcal)), 92, y0 + 76);
+    ctx.font = "700 18px 'PingFang SC', sans-serif"; ctx.fillStyle = "#8b7862";
+    ctx.fillText("KCAL", 92, y0 + 102);
+    ctx.fillStyle = "#e0452a"; ctx.font = "800 24px 'PingFang SC', sans-serif";
+    ctx.fillText(`每日推荐 ${Math.round(t.kcal / 2000 * 100)}%`, 300, y0 + 50);
+    ctx.fillStyle = INK; ctx.font = "600 19px 'PingFang SC', sans-serif";
+    ctx.fillText(`蛋白 ${t.protein.toFixed(1)}g · 脂肪 ${t.fat.toFixed(1)}g`, 300, y0 + 80);
+    ctx.fillText(`碳水 ${t.carb.toFixed(1)}g · 钠 ${Math.round(t.sodium)}mg`, 300, y0 + 108);
 
-    // 组成
-    ctx.textAlign = "center"; ctx.fillStyle = "#5a4a3a";
-    ctx.font = "400 19px 'PingFang SC', sans-serif";
-    wrapText(ctx, stack.map(s => s.item.name).join(" → "), CW / 2, y0 + 178, CW - 150, 28);
+    // 荒诞档案
+    ctx.textAlign = "center"; ctx.fillStyle = "#6b5844";
+    ctx.font = "700 18px 'PingFang SC', sans-serif";
+    ctx.fillText(`≈ ${c.rice} 碗米饭  ·  ≈ 要跑 ${c.km} km  ·  ${persona()}`, CW / 2, y0 + 148);
+
+    // 配方
+    const parts = stack.map(s => s.item.name);
+    const brief = parts.length > 7
+      ? parts.slice(0, 7).join(" → ") + ` → …（共 ${parts.length} 层）`
+      : parts.join(" → ");
+    ctx.fillStyle = "#5a4a3a"; ctx.font = "400 17px 'PingFang SC', sans-serif";
+    wrapText(ctx, brief, CW / 2, y0 + 184, CW - 130, 24);
+
+    // 相似度 / 原创度
     if (sim && sim.top.length) {
-      const a = sim.top[0], rest = sim.top.slice(1);
-      const pc = x => Math.round(x.score * 100);
-      ctx.font = "700 22px 'PingFang SC', sans-serif"; ctx.fillStyle = INK;
-      ctx.fillText(sim.confident
-        ? `官方最接近：${a.name} · 相似度 ${pc(a)}%`
-        : `原创配方 · 与官方最像的 ${a.name} 也才 ${pc(a)}%`, CW / 2, y0 + 246);
-      if (rest.length && y0 + 272 < CH - 100) {
-        ctx.font = "400 17px 'PingFang SC', sans-serif"; ctx.fillStyle = "#8b7862";
-        ctx.fillText(`次选：${rest.map(x => `${x.name} ${pc(x)}%`).join(" · ")}`, CW / 2, y0 + 272);
+      const a = sim.top[0], pc = Math.round(a.score * 100);
+      ctx.font = "800 22px 'PingFang SC', sans-serif";
+      if (sim.confident) {
+        ctx.fillStyle = INK;
+        ctx.fillText(`复刻成立：${a.name} · ${pc}%`, CW / 2, y0 + 246);
+      } else {
+        ctx.fillStyle = "#7c5cff";
+        ctx.fillText(`原创度 ${100 - pc}%  ·  菜单上不存在这一款`, CW / 2, y0 + 246);
+        ctx.fillStyle = "#8b7862"; ctx.font = "400 16px 'PingFang SC', sans-serif";
+        ctx.fillText(`官方离你最近的是 ${a.name}，也才 ${pc}%`, CW / 2, y0 + 272);
       }
+    } else if (stack.length) {
+      ctx.fillStyle = "#7c5cff"; ctx.font = "800 22px 'PingFang SC', sans-serif";
+      ctx.fillText("原创度 100%  ·  官方 16 款里没有一层对得上", CW / 2, y0 + 246);
     }
-    ctx.font = "400 17px 'PingFang SC', sans-serif"; ctx.fillStyle = "#9c8b76";
-    ctx.fillText("营养基于麦当劳中国 MCP 官方营养数据 · 创意层为许愿项", CW / 2, CH - 66);
-    ctx.fillText("MCD BURGER BUILDER", CW / 2, CH - 40);
+
+    // 建议零售价（玩笑）
+    ctx.fillStyle = "#a4927c"; ctx.font = "600 16px 'PingFang SC', sans-serif";
+    ctx.fillText(`建议零售 ${"¥" + (Math.round(c.kcal * 1.7) + c.danger * 200)}（梦里什么都有）`, CW / 2, y0 + 300);
+
+    // 许愿框
+    ctx.textAlign = "center";
+    ctx.fillStyle = "#fff6e2"; ctx.strokeStyle = INK; ctx.lineWidth = 4;
+    roundRect(ctx, 110, y0 + 316, CW - 220, 58, 14); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = "#e0452a"; ctx.font = "800 22px 'PingFang SC', sans-serif";
+    ctx.fillText(`「${wishLine()}」`, CW / 2, y0 + 353);
+
+    ctx.fillStyle = "#9c8b76"; ctx.font = "400 16px 'PingFang SC', sans-serif";
+    ctx.fillText("营养基于麦当劳中国 MCP 官方营养数据 · 传说层为许愿项 · 仅供想象", CW / 2, CH - 64);
+    ctx.fillText("MCD BURGER BUILDER · 1024", CW / 2, CH - 40);
   };
   img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(new XMLSerializer().serializeToString(svgEl))));
 }
@@ -801,7 +1095,7 @@ function downloadCard() {
   drawCard();
   setTimeout(() => {
     const a = document.createElement("a");
-    a.download = (document.getElementById("burgerName").value.trim() || "maimen-burger") + ".png";
+    a.download = (document.getElementById("burgerName").value.trim() || autoName()) + ".png";
     a.href = document.getElementById("shareCanvas").toDataURL("image/png");
     a.click();
   }, 350);
@@ -810,31 +1104,51 @@ function downloadCard() {
 /* ---------------- live MCP mode ---------------- */
 function openLive() { document.getElementById("liveModal").classList.add("show"); }
 function closeLive() { document.getElementById("liveModal").classList.remove("show"); }
+/* 把一次同步结果落到页面状态上；mode = "live"（实时）| "demo"（演示快照） */
+function applyLive(d, mode) {
+  soldOut = new Set(d.soldOut || []);
+  liveOnSale = new Set(d.onSaleReal || []);
+  const extra = (d.unlisted && d.unlisted.length) ? ` · 另有 ${d.unlisted.length} 款官方菜单未收录` : "";
+  const prefix = mode === "demo" ? "演示快照" : "实时";
+  const badge = document.getElementById("liveBadge");
+  badge.className = "live-badge on";
+  badge.textContent = `${prefix}：${d.storeName} · 在售汉堡 ${d.burgers} 款 · 本店不可用食材 ${soldOut.size} 项${extra}`;
+  renderItems(); renderBurger(); renderNutrition();
+  return `${mode === "demo" ? "已载入演示门店（" + (d.capturedAt || "实测") + "）" : "同步成功"}：${d.storeName} · 在售汉堡 ${d.burgers} 款 · 不可用食材 ${soldOut.size} 项${extra}`;
+}
+
 async function doLive() {
   const token = document.getElementById("liveToken").value.trim();
   const city = document.getElementById("liveCity").value.trim();
   const keyword = document.getElementById("liveKeyword").value.trim();
   const status = document.getElementById("liveStatus");
-  if (!token) { status.textContent = "请填入 MCP Token（仅保存在本机内存）"; return; }
-  status.textContent = "正在通过本地代理调用麦当劳 MCP…";
+
+  if (token) {
+    status.textContent = "正在通过本地代理调用麦当劳 MCP…";
+    try {
+      const r = await fetch("http://127.0.0.1:8787/api/live-menu", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, city, keyword }),
+      });
+      const d = await r.json();
+      if (!d.ok) throw new Error(d.error || "同步失败");
+      status.textContent = applyLive(d, "live");
+      setTimeout(closeLive, 1400);
+      return;
+    } catch (e) {
+      status.textContent = "本地代理没响应（" + e.message + "），改用演示门店快照…";
+    }
+  } else {
+    status.textContent = "没填 Token，载入演示门店快照…";
+  }
+
   try {
-    const r = await fetch("http://127.0.0.1:8787/api/live-menu", {
-      method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token, city, keyword }),
-    });
-    const d = await r.json();
-    if (!d.ok) throw new Error(d.error || "同步失败");
-    soldOut = new Set(d.soldOut || []);
-    liveOnSale = new Set(d.onSaleReal || []);
-    const extra = (d.unlisted && d.unlisted.length) ? ` · 另有 ${d.unlisted.length} 款官方菜单未收录` : "";
-    status.textContent = `同步成功：${d.storeName} · 在售汉堡 ${d.burgers} 款 · 不可用食材 ${soldOut.size} 项${extra}`;
-    const badge = document.getElementById("liveBadge");
-    badge.className = "live-badge on";
-    badge.textContent = `实时：${d.storeName} · 在售汉堡 ${d.burgers} 款 · 本店不可用食材 ${soldOut.size} 项${extra}`;
-    renderItems(); renderBurger(); renderNutrition();
-    setTimeout(closeLive, 1200);
+    const d = await (await fetch("data/demo-store.json")).json();
+    status.textContent = applyLive(d, "demo");
+    setTimeout(closeLive, 2400);
   } catch (e) {
-    status.textContent = "同步失败：" + e.message + "（请先运行 python3 tools/live_proxy.py 启动本地代理）";
+    status.textContent = "同步失败：未检测到本地代理，演示快照也加载不到。"
+      + "请先运行 python3 tools/live_proxy.py（端口 8787）再用 Token 同步。";
   }
 }
 

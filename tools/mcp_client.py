@@ -68,7 +68,7 @@ class MCPClient:
         self._post({
             "jsonrpc": "2.0", "id": 0, "method": "initialize",
             "params": {"protocolVersion": PROTOCOL, "capabilities": {},
-                       "clientInfo": {"name": "maimen-burger-builder", "version": "0.2"}},
+                       "clientInfo": {"name": "just-burger-it", "version": "0.2"}},
         })
 
     def list_tools(self):
