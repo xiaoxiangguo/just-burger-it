@@ -1,0 +1,80 @@
+{
+  "meta": {
+    "name": "麦门汉堡搭建器 · 组件库",
+    "fetchedAt": "2026-10-21",
+    "storeCode": "1420207",
+    "realBurgersUpdatedAt": "2026-10-21",
+    "dataSources": {
+      "mcp-diff": "官方营养表(list-nutrition-foods, 158项)中两个真实餐品的差值",
+      "estimated": "以官方数据为锚点的推算值(误差约±20%)",
+      "creative": "创意层, 暂无官方对应产品, 参照同类食材估算",
+      "mcp-modification": "存在于官方 query-meal-detail 特调(modification)清单中的真实食材"
+    },
+    "realBurgersNote": "每款官方产品的组成指纹。code 为 query-meals 返回的商品编码；officialKcal 取自 list-nutrition-foods；layers 按左到右=下到上的层序。无 code 者为全国通用款但本样本门店未单卖(仅营养表可查)。"
+  },
+  "buns": [
+    {"id": "sesame", "name": "经典芝麻堡包", "kcal": 120, "protein": 4, "fat": 2, "carb": 22, "sodium": 300, "source": "estimated", "basis": "汉堡包248kcal - 牛肉饼135kcal - 酱料", "real": true},
+    {"id": "muffin", "name": "英式麦满分", "kcal": 110, "protein": 4, "fat": 1.5, "carb": 21, "sodium": 280, "source": "estimated", "basis": "原味板烧鸡腿麦满分246kcal 反推", "real": true},
+    {"id": "angusbun", "name": "安格斯厚堡包", "kcal": 190, "protein": 6, "fat": 3, "carb": 34, "sodium": 380, "source": "estimated", "basis": "芝士安格斯厚牛堡696kcal 反推", "real": true},
+    {"id": "blackbun", "name": "墨鱼汁黑堡包", "kcal": 130, "protein": 4, "fat": 2, "carb": 24, "sodium": 310, "source": "creative", "basis": "参照芝麻堡包", "real": false},
+    {"id": "ricebun", "name": "米堡(双层米饼)", "kcal": 140, "protein": 3, "fat": 1, "carb": 31, "sodium": 260, "source": "creative", "basis": "参照米制主食", "real": false}
+  ],
+  "patties": [
+    {"id": "beef", "name": "经典牛肉饼", "kcal": 135, "protein": 11, "fat": 10, "carb": 1, "sodium": 344, "source": "mcp-diff", "basis": "双层吉士汉堡429 - 吉士汉堡包294", "real": true},
+    {"id": "angus", "name": "安格斯厚牛饼", "kcal": 307, "protein": 26, "fat": 21, "carb": 3, "sodium": 476, "source": "mcp-diff", "basis": "芝士双层安格斯1003 - 芝士安格斯696", "real": true},
+    {"id": "grilledchicken", "name": "板烧鸡腿肉", "kcal": 240, "protein": 20, "fat": 12, "carb": 9, "sodium": 700, "source": "estimated", "basis": "板烧鸡腿堡391 - 堡包120 - 烤味酱 - 生菜", "real": true},
+    {"id": "spicychicken", "name": "麦辣鸡腿肉", "kcal": 330, "protein": 19, "fat": 21, "carb": 17, "sodium": 870, "source": "estimated", "basis": "麦辣鸡腿汉堡485 反推", "real": true},
+    {"id": "dragonchicken", "name": "龙焰棒腿肉", "kcal": 310, "protein": 18, "fat": 20, "carb": 15, "sodium": 820, "source": "estimated", "basis": "龙焰芝士棒鸡腿堡 参照麦辣鸡腿肉", "real": true},
+    {"id": "mcchickenpatty", "name": "麦香鸡鸡肉饼", "kcal": 206, "protein": 13, "fat": 11, "carb": 13, "sodium": 420, "source": "mcp-diff", "basis": "麦香鸡369 - 芝麻堡包120 - 生菜3 - 麦香鸡酱40", "real": true},
+    {"id": "fish", "name": "深海鳕鱼排", "kcal": 170, "protein": 11, "fat": 9, "carb": 14, "sodium": 400, "source": "estimated", "basis": "双层深海鳕鱼堡485 反推均摊", "real": true},
+    {"id": "pork", "name": "猪柳(早餐肉)", "kcal": 126, "protein": 6, "fat": 11, "carb": 1, "sodium": 364, "source": "mcp-diff", "basis": "双层猪柳蛋麦满分513 - 猪柳蛋麦满分387", "real": true},
+    {"id": "bacon", "name": "培根", "kcal": 60, "protein": 3, "fat": 5, "carb": 0.5, "sodium": 300, "source": "estimated", "basis": "培根蔬萃双层牛堡 与双层牛堡差值", "real": true},
+    {"id": "shrimp", "name": "鲜虾排(创意)", "kcal": 150, "protein": 14, "fat": 7, "carb": 8, "sodium": 350, "source": "creative", "basis": "参照鳕鱼排", "real": false},
+    {"id": "turkeynoodle", "name": "火鸡面肉饼(创意)", "kcal": 280, "protein": 15, "fat": 14, "carb": 22, "sodium": 900, "source": "creative", "basis": "参照麦辣鸡腿肉+火鸡面酱钠含量", "real": false}
+  ],
+  "cheeses": [
+    {"id": "cheese", "name": "吉士片", "kcal": 46, "protein": 3, "fat": 4, "carb": 1, "sodium": 181, "source": "mcp-diff", "basis": "吉士汉堡包294 - 汉堡包248", "real": true},
+    {"id": "gouda", "name": "高达干酪片", "kcal": 60, "protein": 4, "fat": 5, "carb": 1, "sodium": 200, "source": "estimated", "basis": "参照吉士片", "real": true}
+  ],
+  "veggies": [
+    {"id": "tomato", "name": "番茄片", "kcal": 5, "protein": 0.2, "fat": 0, "carb": 1, "sodium": 2, "source": "estimated", "basis": "常见蔬菜估值", "real": true},
+    {"id": "lettuce", "name": "生菜", "kcal": 3, "protein": 0.2, "fat": 0, "carb": 0.5, "sodium": 3, "source": "estimated", "basis": "常见蔬菜估值", "real": true},
+    {"id": "choppedlettuce", "name": "切块生菜", "kcal": 3, "protein": 0.2, "fat": 0, "carb": 0.5, "sodium": 3, "source": "estimated", "basis": "常见蔬菜估值", "real": true},
+    {"id": "pickle", "name": "酸黄瓜片", "kcal": 5, "protein": 0.1, "fat": 0, "carb": 1, "sodium": 120, "source": "estimated", "basis": "腌制蔬菜估值", "real": true},
+    {"id": "onion", "name": "洋葱粒", "kcal": 5, "protein": 0.2, "fat": 0, "carb": 1, "sodium": 2, "source": "estimated", "basis": "常见蔬菜估值", "real": true},
+    {"id": "avocado", "name": "牛油果片(创意)", "kcal": 40, "protein": 0.5, "fat": 4, "carb": 2, "sodium": 3, "source": "creative", "basis": "常见水果估值", "real": false},
+    {"id": "pineapple", "name": "夏威夷菠萝圈(创意)", "kcal": 25, "protein": 0.2, "fat": 0, "carb": 6, "sodium": 1, "source": "creative", "basis": "常见水果估值", "real": false}
+  ],
+  "sauces": [
+    {"id": "ketchup", "name": "番茄酱", "kcal": 15, "protein": 0.3, "fat": 0, "carb": 3.5, "sodium": 130, "source": "estimated", "basis": "常见酱料估值", "real": true},
+    {"id": "mustard", "name": "芥末酱", "kcal": 5, "protein": 0.2, "fat": 0.2, "carb": 0.6, "sodium": 85, "source": "estimated", "basis": "常见酱料估值", "real": true},
+    {"id": "beefsauce", "name": "烤牛肉风味酱", "kcal": 30, "protein": 0.5, "fat": 1, "carb": 6, "sodium": 250, "source": "estimated", "basis": "常见酱料估值", "real": true},
+    {"id": "chickensauce", "name": "麦香鸡酱", "kcal": 40, "protein": 0.3, "fat": 3.5, "carb": 2, "sodium": 180, "source": "estimated", "basis": "常见酱料估值", "real": true},
+    {"id": "bigmacsauce", "name": "巨无霸酱", "kcal": 64, "protein": 0.4, "fat": 6, "carb": 2.5, "sodium": 210, "source": "mcp-diff", "basis": "巨无霸513 - 堡包120 - 双牛270 - 吉士46 - 菜/瓜/葱13", "real": true},
+    {"id": "cheesesauce", "name": "醇香芝士风味酱", "kcal": 40, "protein": 1, "fat": 3.5, "carb": 1.5, "sodium": 220, "source": "estimated", "basis": "常见酱料估值", "real": true},
+    {"id": "grillsauce", "name": "烤味酱", "kcal": 25, "protein": 0.3, "fat": 0.8, "carb": 5, "sodium": 240, "source": "estimated", "basis": "常见酱料估值", "real": true},
+    {"id": "chilibutter", "name": "辣椒黄油风味酱", "kcal": 45, "protein": 0.4, "fat": 4.5, "carb": 1.5, "sodium": 210, "source": "estimated", "basis": "常见酱料估值", "real": true},
+    {"id": "mustardsalad", "name": "芥末沙拉酱", "kcal": 35, "protein": 0.3, "fat": 3.5, "carb": 1, "sodium": 160, "source": "estimated", "basis": "常见酱料估值", "real": true},
+    {"id": "fishsauce", "name": "麦香鱼酱", "kcal": 35, "protein": 0.3, "fat": 3.4, "carb": 1.2, "sodium": 170, "source": "mcp-diff", "basis": "麦香鱼325 - 堡包120 - 鳕鱼排170", "real": true},
+    {"id": "butter", "name": "黄油", "kcal": 35, "protein": 0, "fat": 4, "carb": 0, "sodium": 30, "source": "estimated", "basis": "常见油脂估值", "real": true},
+    {"id": "turkeysauce", "name": "火鸡面甜辣酱(创意)", "kcal": 40, "protein": 0.3, "fat": 0.5, "carb": 9, "sodium": 480, "source": "creative", "basis": "参照火鸡面酱包", "real": false}
+  ],
+  "realBurgers": [
+    {"name": "巨无霸", "code": "1100", "officialKcal": 513, "source": "mcp-detail", "layers": ["sesame", "beef", "beef", "lettuce", "cheese", "pickle", "onion", "bigmacsauce"]},
+    {"name": "麦辣鸡腿汉堡", "code": "1440", "officialKcal": 485, "source": "mcp-detail", "layers": ["sesame", "spicychicken", "choppedlettuce", "chickensauce"]},
+    {"name": "板烧鸡腿堡", "code": "1406", "officialKcal": 391, "source": "mcp-detail", "layers": ["sesame", "grilledchicken", "choppedlettuce", "grillsauce"]},
+    {"name": "双层吉士汉堡", "code": "1120", "officialKcal": 429, "source": "mcp-detail", "layers": ["sesame", "beef", "beef", "cheese", "onion", "pickle", "ketchup", "mustard"]},
+    {"name": "芝士安格斯厚牛堡", "code": "511782", "officialKcal": 696, "source": "mcp-detail", "layers": ["angusbun", "angus", "gouda", "cheesesauce", "tomato", "butter"]},
+    {"name": "培根安格斯厚牛堡", "code": "511781", "officialKcal": 707, "source": "mcp-detail", "layers": ["angusbun", "angus", "cheese", "bacon", "choppedlettuce", "beefsauce", "butter"]},
+    {"name": "双层深海鳕鱼堡", "code": "9900003586", "officialKcal": 485, "source": "mcp-detail", "layers": ["sesame", "fish", "fish", "lettuce", "mustardsalad"]},
+    {"name": "龙焰芝士棒鸡腿堡", "code": "521953", "officialKcal": null, "source": "mcp-detail", "layers": ["sesame", "dragonchicken", "choppedlettuce", "chilibutter"]},
+    {"name": "培根蔬萃双层牛堡", "code": "1106", "officialKcal": 442, "source": "mcp-detail", "layers": ["sesame", "beef", "beef", "bacon", "lettuce", "tomato", "chickensauce", "ketchup"]},
+    {"name": "高达吉士双牛堡", "code": "521316", "officialKcal": null, "source": "mcp-detail", "layers": ["sesame", "beef", "beef", "gouda", "onion", "pickle", "ketchup", "mustard"]},
+    {"name": "龙焰鸡腿堡", "code": "521952", "officialKcal": null, "source": "mcp-detail", "layers": ["sesame", "dragonchicken", "choppedlettuce", "chilibutter"]},
+    {"name": "不素之霸双层牛堡", "code": "4648", "officialKcal": 493, "source": "mcp-detail", "layers": ["sesame", "beef", "beef", "bacon", "mustardsalad"]},
+    {"name": "麦香鱼", "code": "1600", "officialKcal": 325, "source": "mcp-detail", "layers": ["sesame", "fish", "fishsauce"]},
+    {"name": "麦香鸡", "code": "1450", "officialKcal": 369, "source": "mcp-detail", "layers": ["sesame", "mcchickenpatty", "lettuce", "chickensauce"]},
+    {"name": "汉堡包", "code": null, "officialKcal": 248, "source": "nutrition-table", "layers": ["sesame", "beef", "ketchup", "mustard", "pickle", "onion"]},
+    {"name": "吉士汉堡包", "code": null, "officialKcal": 294, "source": "nutrition-table", "layers": ["sesame", "beef", "cheese", "ketchup", "mustard", "pickle", "onion"]}
+  ]
+}

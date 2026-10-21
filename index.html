@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>麦门汉堡搭建器 · 定制专属于你的麦门汉堡🍔</title>
+<style>
+  :root {
+    --ink: #241c18;
+    --paper: #fbf3e6;
+    --card: #fffdf9;
+    --red: #e0452a;
+    --yellow: #f5b21f;
+    --green: #5a9e4b;
+    --blue: #3d7ea6;
+    --muted: #8b7862;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    background: var(--paper); color: var(--ink);
+    background-image: radial-gradient(#efe1cb 1.3px, transparent 1.3px);
+    background-size: 24px 24px;
+    -webkit-font-smoothing: antialiased;
+  }
+  header { text-align: center; padding: 26px 16px 6px; }
+  header .kicker {
+    display:inline-block; background: var(--ink); color: #ffe9a8; font-size: 12px;
+    letter-spacing: 3px; padding: 4px 12px; border-radius: 999px; margin-bottom: 10px;
+  }
+  header h1 { font-size: 36px; letter-spacing: 2px; line-height: 1.15; }
+  header h1 em {
+    font-style: normal; color: var(--red);
+    text-shadow: 3px 3px 0 var(--yellow);
+  }
+  header .slogan { margin-top: 10px; font-size: 15px; color: #6d5b49; font-weight: 600; }
+
+  main {
+    max-width: 1140px; margin: 0 auto; padding: 18px 16px 8px;
+    display: grid; grid-template-columns: 1.05fr .95fr; gap: 20px; align-items: start;
+  }
+  @media (max-width: 940px) { main { grid-template-columns: 1fr; } }
+  .panel {
+    background: var(--card); border: 3px solid var(--ink); border-radius: 18px;
+    box-shadow: 7px 7px 0 rgba(36,28,24,.14); padding: 18px;
+  }
+  .panel-title {
+    font-size: 13px; font-weight: 800; letter-spacing: 2px; color: var(--muted);
+    margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+  }
+  .panel-title::after { content: ""; flex: 1; height: 2px; background: repeating-linear-gradient(90deg,#e2d3bb 0 6px,transparent 6px 12px); }
+
+  /* ===== stage ===== */
+  #stage { display: flex; flex-direction: column; align-items: center; }
+  #burgerSvg { width: 100%; max-width: 400px; }
+  #similarity {
+    margin-top: 6px; font-size: 13px; color: var(--muted); text-align: center;
+    border-top: 2px dashed #e6d7c0; padding-top: 10px; width: 100%;
+  }
+  #similarity b { color: var(--ink); }
+  #similarity .name { color: var(--red); font-weight: 800; font-size: 15px; }
+  .sim-lead b { background: #ffe9a8; border: 2px solid var(--ink); border-radius: 999px; padding: 0 7px; font-size: 11.5px; margin-left: 5px; }
+  .sim-lead.none { color: var(--red); font-weight: 800; font-size: 13.5px; }
+  .sim-rest { margin-top: 5px; font-size: 11.5px; color: #a4927c; }
+  .sim-rest b { color: #6b5844; }
+  .sim-gap { margin-top: 6px; font-size: 11.5px; color: #6b5844; background: #f6ecd9; border-left: 3px solid #c9a25e; border-radius: 0 7px 7px 0; padding: 4px 8px; }
+  .sim-gap.exact { border-left-color: #5a9e4b; color: #487a3c; background: #eef6e8; }
+  .sim-chip { display: inline-block; font-size: 10.5px; font-weight: 700; border-radius: 999px; padding: 1px 7px; margin-left: 6px; vertical-align: 1px; }
+  .sim-chip.on { background: #e6f3dc; color: #3f7a2e; border: 1.5px solid #5a9e4b; }
+  .sim-chip.off { background: #f4ece1; color: #9c8b76; border: 1.5px dashed #bbaa93; }
+
+  /* ===== nutrition hero ===== */
+  .hero {
+    display: grid; grid-template-columns: auto 1fr; gap: 14px; align-items: center;
+    border: 3px solid var(--ink); border-radius: 14px; padding: 12px 14px;
+    background: linear-gradient(135deg, #fff6e2 0%, #ffe9c0 100%);
+    box-shadow: 4px 4px 0 rgba(36,28,24,.12);
+  }
+  .ring { position: relative; width: 104px; height: 104px; flex-shrink: 0; }
+  .ring svg { transform: rotate(-90deg); }
+  .ring .val {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; line-height: 1;
+  }
+  .ring .val strong { font-size: 30px; letter-spacing: -1px; }
+  .ring .val span { font-size: 10px; color: var(--muted); margin-top: 3px; letter-spacing: 1px; }
+  .hero-info .big-label { font-size: 11px; letter-spacing: 2px; color: var(--muted); font-weight: 800; }
+  .hero-info .nrv { font-size: 13px; font-weight: 700; margin-top: 4px; }
+  .hero-info .nrv b { color: var(--red); font-size: 17px; }
+  .hero-info .hint { font-size: 11px; color: #9b8a76; margin-top: 6px; line-height: 1.5; }
+
+  .macros { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+  .macro { display: grid; grid-template-columns: 46px 1fr 96px; gap: 8px; align-items: center; font-size: 12px; }
+  .macro .label { font-weight: 700; color: #5d4a38; }
+  .macro .bar { height: 12px; background: #efe2cd; border: 2px solid var(--ink); border-radius: 999px; overflow: hidden; }
+  .macro .bar i { display: block; height: 100%; border-radius: 999px; }
+  .macro .num { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .macro .num small { color: var(--muted); font-weight: 500; }
+  .sodium { margin-top: 10px; font-size: 12px; display: flex; gap: 8px; align-items: center; }
+  .sodium .pill { border: 2px solid var(--ink); border-radius: 999px; padding: 2px 9px; font-weight: 800; font-size: 11px; }
+  .sodium.warn .pill { background: #ffe0d8; color: #b9301a; }
+  .sodium.ok .pill { background: #e3f2dc; color: #3d6f2e; }
+
+  /* ===== picker ===== */
+  .tabs { display: flex; gap: 7px; flex-wrap: wrap; margin: 4px 0 12px; }
+  .tab {
+    padding: 7px 13px; border: 2.5px solid var(--ink); border-radius: 999px;
+    background: #fff; cursor: pointer; font-weight: 700; font-size: 13px; user-select: none;
+  }
+  .tab.active { background: var(--yellow); box-shadow: 3px 3px 0 var(--ink); }
+  .items { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .item {
+    border: 2.5px solid var(--ink); border-radius: 12px; padding: 8px 10px;
+    cursor: pointer; background: #fff; font-size: 13px; position: relative;
+    transition: transform .07s, box-shadow .07s;
+  }
+  .item:hover { transform: translateY(-2px); box-shadow: 3px 3px 0 var(--ink); }
+  .item .n { font-weight: 800; display: block; }
+  .item .k { color: var(--muted); font-size: 11.5px; }
+  .item .badge { position: absolute; top: -9px; right: -5px; background: var(--red); color: #fff; font-size: 10px; padding: 1px 6px; border-radius: 999px; border: 2px solid var(--ink); }
+
+  /* ===== stack ===== */
+  .stack { margin-top: 12px; display: flex; flex-direction: column; gap: 6px; max-height: 220px; overflow-y: auto; padding-right: 2px; }
+  .row { display: flex; align-items: center; gap: 8px; border: 2px dashed #d9c6a8; border-radius: 10px; padding: 6px 8px; font-size: 12.5px; background: #fffdf8; }
+  .row .cat { font-size: 10.5px; color: #fff; border-radius: 6px; padding: 2px 6px; flex-shrink: 0; font-weight: 700; }
+  .row .grow { flex: 1; font-weight: 600; }
+  .row .grow small { color: #a4927c; font-weight: 500; }
+  .row button { border: 2px solid var(--ink); background: #fff; border-radius: 8px; cursor: pointer; width: 25px; height: 25px; font-weight: 800; line-height: 1; }
+  .empty { text-align: center; color: #b3a28c; padding: 22px 0; font-size: 13px; }
+
+  .actions { display: grid; grid-template-columns: 1fr 1fr 1.4fr; gap: 8px; margin-top: 14px; }
+  .btn {
+    padding: 13px 0; border: 3px solid var(--ink); border-radius: 13px; font-size: 14px;
+    font-weight: 800; cursor: pointer; box-shadow: 4px 4px 0 rgba(36,28,24,.18); transition: transform .07s;
+  }
+  .btn:active { transform: translate(2px,2px); box-shadow: 1px 1px 0 rgba(36,28,24,.18); }
+  .btn.primary { background: var(--red); color: #fff; }
+  .btn.ghost { background: #fff; }
+  .btn.gold { background: var(--yellow); }
+  .btn.live { background: #e6f0e0; border-color: var(--ink); }
+  footer { text-align: center; padding: 16px 16px 30px; font-size: 11.5px; color: #a1917c; line-height: 1.9; }
+
+  /* ===== live panel ===== */
+  .live-panel { background: linear-gradient(160deg, #f3f9ee 0%, #e7f1e0 100%); }
+  .live-note { font-size: 12px; color: #5c6b52; line-height: 1.75; }
+  .live-note code { background: #fff; border: 1.5px solid #cfe0c3; border-radius: 5px; padding: 0 4px; font-size: 11px; }
+  .live-badge {
+    margin: 10px 0; font-size: 11.5px; font-weight: 700; color: #4a6b3c;
+    background: #fff; border: 2px dashed #b9d3a8; border-radius: 10px; padding: 7px 10px;
+  }
+  .live-badge.on { border-style: solid; border-color: #5a9e4b; background: #eef8e8; color: #3d6f2e; }
+  .btn.live { background: #cfe6c2; }
+  .btn.wide { width: 100%; }
+
+  /* ===== share modal ===== */
+  #modal, #liveModal { position: fixed; inset: 0; background: rgba(36,28,24,.6); display: none; align-items: center; justify-content: center; z-index: 50; padding: 16px; overflow: auto; }
+  #modal.show, #liveModal.show { display: flex; }
+  #modal .box, #liveModal .box { background: var(--paper); border: 3px solid var(--ink); border-radius: 18px; padding: 16px; max-width: 470px; width: 100%; text-align: center; }
+  #modal h3, #liveModal h3 { margin-bottom: 2px; }
+  #modal .sub, #liveModal .sub { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  #modal input, #liveModal input { width: 100%; padding: 11px; font-size: 15px; border: 2.5px solid var(--ink); border-radius: 11px; margin: 6px 0 10px; text-align: center; background: #fff; font-family: inherit; }
+  #shareCanvas { max-width: 100%; border: 2.5px solid var(--ink); border-radius: 12px; background: #fff; }
+  .source-note { font-size: 11px; color: #9c8b76; line-height: 1.75; }
+  .source-note b { color: #6b5844; }
+</style>
+</head>
+<body>
+<header>
+  <div class="kicker">MCD BURGER BUILDER · 1024</div>
+  <h1>麦门<em>汉堡搭建器</em></h1>
+  <p class="slogan">定制专属于你的麦门汉堡🍔</p>
+</header>
+
+<main>
+  <!-- ================= 左：汉堡舞台 ================= -->
+  <div class="panel" id="stage">
+    <div class="panel-title">你的作品 YOUR BUILD</div>
+    <div id="burgerSvg"></div>
+    <div id="similarity"></div>
+  </div>
+
+  <!-- ================= 右：控制台 ================= -->
+  <div>
+    <div class="panel">
+      <div class="panel-title">营养核算 NUTRITION</div>
+      <div class="hero">
+        <div class="ring">
+          <svg width="104" height="104" viewBox="0 0 104 104">
+            <circle cx="52" cy="52" r="44" fill="none" stroke="#f0e0c4" stroke-width="12"/>
+            <circle id="ringArc" cx="52" cy="52" r="44" fill="none" stroke="#e0452a" stroke-width="12"
+                    stroke-linecap="round" stroke-dasharray="276.5" stroke-dashoffset="276.5"/>
+          </svg>
+          <div class="val"><strong id="heroKcal">0</strong><span>KCAL</span></div>
+        </div>
+        <div class="hero-info">
+          <div class="big-label">这一颗的热量</div>
+          <div class="nrv">约合每日推荐摄入的 <b id="nrvPct">0%</b></div>
+          <div class="hint">按成人每日 2000 kcal 估算 · 数据来自麦当劳官方营养表</div>
+        </div>
+      </div>
+
+      <div class="macros">
+        <div class="macro">
+          <span class="label">蛋白质</span>
+          <div class="bar"><i id="barProtein" style="width:0%;background:#5a9e4b"></i></div>
+          <span class="num"><span id="valProtein">0</span>g <small id="pctProtein">0%</small></span>
+        </div>
+        <div class="macro">
+          <span class="label">脂肪</span>
+          <div class="bar"><i id="barFat" style="width:0%;background:#e8a33d"></i></div>
+          <span class="num"><span id="valFat">0</span>g <small id="pctFat">0%</small></span>
+        </div>
+        <div class="macro">
+          <span class="label">碳水</span>
+          <div class="bar"><i id="barCarb" style="width:0%;background:#3d7ea6"></i></div>
+          <span class="num"><span id="valCarb">0</span>g <small id="pctCarb">0%</small></span>
+        </div>
+      </div>
+      <div class="sodium ok" id="sodiumRow">
+        <span class="pill" id="sodiumVal">0 mg 钠</span>
+        <span id="sodiumMsg">钠含量在舒适范围内</span>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:16px">
+      <div class="panel-title">选食材 INGREDIENTS</div>
+      <div class="tabs" id="tabs"></div>
+      <div class="items" id="items"></div>
+
+      <div class="panel-title" style="margin-top:16px">当前结构 LAYERS</div>
+      <div class="stack" id="stack"></div>
+
+      <div class="actions">
+        <button class="btn ghost" onclick="randomize()">🎲 乱搭</button>
+        <button class="btn ghost" onclick="reset()">清空</button>
+        <button class="btn primary" onclick="openShare()">📸 出餐卡</button>
+      </div>
+    </div>
+
+    <div class="panel live-panel" style="margin-top:16px">
+      <div class="panel-title">实时模式 LIVE MCP</div>
+      <div class="live-note">
+        填入你自己的 MCP Token，应用会实时调用
+        <code>query-nearby-stores</code> → <code>query-meals</code> → <code>query-meal-detail</code>，
+        把食材库换成本店真实在售的东西——门店没有的食材会被标记「本店暂未售」。
+      </div>
+      <div class="live-badge" id="liveBadge">当前：内置快照模式 · 数据快照 2026-10-21</div>
+      <button class="btn live wide" onclick="openLive()">🔗 同步门店在售食材</button>
+    </div>
+
+    <div class="panel" style="margin-top:16px">
+      <div class="panel-title">数据口径 DATA SOURCE</div>
+      <div class="source-note">
+        · <b>官方差值</b>（绿）：官方营养表两个真实餐品的差，如「双层吉士汉堡 429 − 吉士汉堡包 294 = 牛肉饼 135 kcal」<br>
+        · <b>推算</b>（蓝）：以官方数据为锚的估算，误差约 ±20%<br>
+        · <b>创意</b>（红）：官方暂无对应产品（火鸡面肉饼、鲜虾排…），就当许愿<br>
+        · 数据源：麦当劳中国 MCP Server（list-nutrition-foods / query-meals / query-meal-detail），快照 2026-10-21
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  麦门汉堡搭建器 · 定制专属于你的麦门汉堡🍔<br>
+  麦当劳程序员创意开发大赛参赛作品 · 非官方出品 · 数据来自麦当劳中国 MCP 公开接口
+</footer>
+
+<div id="modal">
+  <div class="box">
+    <h3>🖼️ 你的专属出餐卡</h3>
+    <div class="sub">起个名字，让它成为麦门传说</div>
+    <input id="burgerName" placeholder="例：火鸡面安格斯巨兽堡" maxlength="20">
+    <canvas id="shareCanvas" width="900" height="1160"></canvas>
+    <div class="actions" style="grid-template-columns: 1fr 1fr; margin-top:12px">
+      <button class="btn ghost" onclick="closeShare()">返回改堡</button>
+      <button class="btn gold" onclick="downloadCard()">⬇️ 保存卡片</button>
+    </div>
+  </div>
+</div>
+
+<div id="liveModal">
+  <div class="box" style="max-width:430px">
+    <h3>🔗 实时同步门店在售食材</h3>
+    <div class="sub" style="line-height:1.7; text-align:left; margin-top:8px">
+      输入你自己的麦当劳 MCP Token 与城市，应用会实时调用<br>
+      <code>query-nearby-stores → query-meals → query-meal-detail</code><br>
+      拉取当前门店真实在售的汉堡与配料，门店没有的食材会被标记售罄。
+    </div>
+    <input id="liveToken" placeholder="MCP Token（仅本机内存，不上传）">
+    <input id="liveCity" placeholder="城市，如：深圳市" value="深圳市">
+    <input id="liveKeyword" placeholder="商圈关键词，如：南山" value="南山">
+    <div id="liveStatus" style="font-size:12px;color:#8b7862;margin:4px 0 8px">可用本地代理：默认 http://127.0.0.1:8787</div>
+    <div class="actions" style="grid-template-columns: 1fr 1fr">
+      <button class="btn ghost" onclick="closeLive()">取消</button>
+      <button class="btn primary" onclick="doLive()">开始同步</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const CATS = [
+  { key: "bun",    label: "🍞 面包", color: "#d99a4e", limit: 1 },
+  { key: "patty",  label: "🥩 肉层", color: "#8c5b3f", limit: 3 },
+  { key: "cheese", label: "🧀 芝士", color: "#e8b62c", limit: 3 },
+  { key: "veg",    label: "🥬 蔬菜", color: "#5a9e4b", limit: 4 },
+  { key: "sauce",  label: "🥫 酱料", color: "#c94f30", limit: 3 },
+];
+const SOURCE_TAG = {
+  "mcp-diff": { label: "官方差值", color: "#5a9e4b" },
+  "estimated": { label: "推算", color: "#3d7ea6" },
+  "creative": { label: "创意", color: "#e0452a" },
+};
+const TYPE_KEY = { bun: "buns", patty: "patties", cheese: "cheeses", veg: "veggies", sauce: "sauces" };
+const W = 380;
+let DATA = null;
+let stack = [];
+let activeCat = "patty";
+let soldOut = new Set();   // 实时模式下不可用的食材 id
+let liveOnSale = null;     // 实时模式下本店在售的官方产品名；null 表示未同步
+
+async function init() {
+  DATA = await (await fetch("data/components.json")).json();
+  DATA.byType = {};
+  for (const cat of Object.keys(TYPE_KEY)) {
+    DATA.byType[cat] = DATA[TYPE_KEY[cat]].map(x => ({ ...x, cat }));
+  }
+  DATA.nameOf = {};
+  for (const cat of Object.keys(TYPE_KEY)) for (const x of DATA.byType[cat]) DATA.nameOf[x.id] = x.name;
+  DATA.wOf = {};
+  for (const cat of Object.keys(TYPE_KEY)) for (const x of DATA.byType[cat]) DATA.wOf[x.id] = SIM_WEIGHT[cat];
+  const pick = (c, id) => DATA.byType[c].find(x => x.id === id);
+  stack = [
+    { cat: "bun", item: DATA.byType.bun[0] },
+    { cat: "patty", item: pick("patty", "spicychicken") },
+    { cat: "veg", item: pick("veg", "choppedlettuce") },
+    { cat: "sauce", item: pick("sauce", "chickensauce") },
+  ];
+  renderTabs(); renderItems(); renderStack(); renderBurger(); renderNutrition();
+}
+
+/* ---------------- pickers ---------------- */
+function renderTabs() {
+  document.getElementById("tabs").innerHTML = CATS.map(c =>
+    `<div class="tab ${c.key === activeCat ? "active" : ""}" onclick="setCat('${c.key}')">${c.label}</div>`).join("");
+}
+function setCat(k) { activeCat = k; renderTabs(); renderItems(); }
+function renderItems() {
+  document.getElementById("items").innerHTML = DATA.byType[activeCat].map(it => {
+    const tag = SOURCE_TAG[it.source];
+    const out = soldOut.has(it.id);
+    return `<div class="item" onclick="${out ? "" : `addItem('${it.id}','${it.cat}')`}" style="${out ? "opacity:.42;cursor:not-allowed" : ""}">
+      ${it.source === "creative" ? `<span class="badge">创意</span>` : ""}
+      <span class="n">${it.name}</span>
+      <span class="k">${out ? "本店暂未售" : Math.round(it.kcal) + " kcal · " + tag.label}</span>
+    </div>`;
+  }).join("");
+}
+function addItem(id, cat) {
+  const limit = CATS.find(c => c.key === cat).limit;
+  if (stack.filter(s => s.cat === cat).length >= limit) { flash(`${CATS.find(c => c.key === cat).label}最多 ${limit} 层`); return; }
+  stack.push({ cat, item: DATA.byType[cat].find(x => x.id === id) });
+  renderStack(); renderBurger(); renderNutrition();
+}
+function removeAt(i) { stack.splice(i, 1); renderStack(); renderBurger(); renderNutrition(); }
+function moveUp(i) { if (i === 0) return; [stack[i - 1], stack[i]] = [stack[i], stack[i - 1]]; renderStack(); renderBurger(); }
+function reset() { stack = []; renderStack(); renderBurger(); renderNutrition(); }
+function randomize() {
+  const avail = c => DATA.byType[c].filter(x => !soldOut.has(x.id));
+  const pick = c => { const l = avail(c); return l[Math.floor(Math.random() * l.length)]; };
+  const bun = pick("bun"); if (!bun) return;
+  stack = [{ cat: "bun", item: bun }];
+  const n = 1 + Math.floor(Math.random() * 2);
+  for (let i = 0; i < n; i++) { const p = pick("patty"); if (p) stack.push({ cat: "patty", item: p }); }
+  if (Math.random() < 0.8) { const c = pick("cheese"); if (c) stack.push({ cat: "cheese", item: c }); }
+  const nv = Math.floor(Math.random() * 3);
+  for (let i = 0; i < nv; i++) { const v = pick("veg"); if (v) stack.push({ cat: "veg", item: v }); }
+  const s = pick("sauce"); if (s) stack.push({ cat: "sauce", item: s });
+  renderStack(); renderBurger(); renderNutrition();
+}
+let flashTimer = null;
+function flash(msg) {
+  let el = document.getElementById("flash");
+  if (!el) {
+    el = document.createElement("div"); el.id = "flash";
+    el.style.cssText = "position:fixed;top:16px;left:50%;transform:translateX(-50%);background:#241c18;color:#ffe9a8;padding:10px 18px;border-radius:99px;z-index:99;font-size:13px;font-weight:700";
+    document.body.appendChild(el);
+  }
+  el.textContent = msg; el.style.display = "block";
+  clearTimeout(flashTimer); flashTimer = setTimeout(() => el.style.display = "none", 1900);
+}
+function renderStack() {
+  const label = k => CATS.find(c => c.key === k).label.split(" ")[1];
+  const color = k => CATS.find(c => c.key === k).color;
+  document.getElementById("stack").innerHTML = stack.length
+    ? stack.map((s, i) => `<div class="row">
+        <span class="cat" style="background:${color(s.cat)}">${label(s.cat)}</span>
+        <span class="grow">${s.item.name} <small>${Math.round(s.item.kcal)} kcal</small></span>
+        <button onclick="moveUp(${i})" title="上移">↑</button>
+        <button onclick="removeAt(${i})" title="移除">×</button>
+      </div>`).join("")
+    : `<div class="empty">从上面选食材，搭出你的专属汉堡</div>`;
+}
+
+/* ---------------- nutrition ---------------- */
+function totals() {
+  const t = { kcal: 0, protein: 0, fat: 0, carb: 0, sodium: 0 };
+  for (const s of stack) {
+    t.kcal += s.item.kcal; t.protein += s.item.protein; t.fat += s.item.fat;
+    t.carb += s.item.carb; t.sodium += s.item.sodium;
+  }
+  return t;
+}
+function renderNutrition() {
+  const t = totals();
+  const kcal = Math.round(t.kcal);
+  document.getElementById("heroKcal").textContent = kcal;
+  // ring: 2000 kcal 为满环, 最多显示满
+  const C = 2 * Math.PI * 44;
+  const pct = Math.min(1, t.kcal / 2000);
+  document.getElementById("ringArc").setAttribute("stroke-dashoffset", String(C * (1 - pct)));
+  document.getElementById("ringArc").setAttribute("stroke",
+    t.kcal > 900 ? "#e0452a" : t.kcal > 600 ? "#e8a33d" : "#5a9e4b");
+  document.getElementById("nrvPct").textContent = Math.round(t.kcal / 2000 * 100) + "%";
+  // macros: 能量占比 = 4/9/4
+  const eP = t.protein * 4, eF = t.fat * 9, eC = t.carb * 4;
+  const eSum = eP + eF + eC || 1;
+  const rows = [["Protein", t.protein, eP / eSum], ["Fat", t.fat, eF / eSum], ["Carb", t.carb, eC / eSum]];
+  rows.forEach(([k, g, share]) => {
+    document.getElementById("val" + k).textContent = g.toFixed(1);
+    document.getElementById("pct" + k).textContent = Math.round(share * 100) + "%";
+    document.getElementById("bar" + k).style.width = Math.min(100, share * 100) + "%";
+  });
+  const sodiumRow = document.getElementById("sodiumRow");
+  document.getElementById("sodiumVal").textContent = Math.round(t.sodium) + " mg 钠";
+  const over = t.sodium > 2000;
+  sodiumRow.className = "sodium " + (over ? "warn" : "ok");
+  document.getElementById("sodiumMsg").textContent = over
+    ? `已超过每日建议上限（2000mg）${Math.round((t.sodium - 2000))}mg，记得多喝水`
+    : `约为每日建议上限的 ${Math.round(t.sodium / 2000 * 100)}%`;
+}
+
+/* ---------------- similarity（按层计数 + 分类加权） ---------------- */
+const SIM_MIN = 0.40;   // 低于此分数不再声称“官方最接近”，显示为原创
+const SIM_TOP = 3;      // 展示候选数
+// 面包/肉饼/芝士定义一颗汉堡的身份，蔬菜/酱料是点缀：加权后“搭了核心几层”
+// 才能真正命中基础款，否则层数少的产品会永远占优（如 5 层的不素之霸压过 6 层的汉堡包）。
+const SIM_WEIGHT = { bun: 3, patty: 3, cheese: 2, veg: 1, sauce: 1 };
+
+function countLayers(ids) {
+  const m = new Map();
+  for (const id of ids) m.set(id, (m.get(id) || 0) + 1);
+  return m;
+}
+
+function similarity() {
+  if (!stack.length) return null;
+  const u = countLayers(stack.map(s => s.item.id));
+  const wt = id => DATA.wOf[id] || 1;
+  const scored = DATA.realBurgers.map(rb => {
+    const r = countLayers(rb.layers);
+    let inter = 0, union = 0;
+    for (const k of new Set([...u.keys(), ...r.keys()])) {
+      const a = u.get(k) || 0, b = r.get(k) || 0;
+      inter += wt(k) * Math.min(a, b);
+      union += wt(k) * Math.max(a, b);
+    }
+    // 官方有、你没放的层 —— 用来告诉用户“还差几层就能复刻”
+    const missing = [];
+    for (const [k, b] of r) {
+      const a = u.get(k) || 0;
+      if (b > a) missing.push({ id: k, gap: b - a });
+    }
+    const onSale = liveOnSale ? liveOnSale.has(rb.name) : null;
+    return { name: rb.name, score: union ? inter / union : 0, inter, missing, onSale };
+  }).filter(x => x.inter > 0)
+    .sort((a, b) => b.score - a.score || b.inter - a.inter);
+  if (!scored.length) return { top: [], confident: false };
+  return { top: scored.slice(0, SIM_TOP), confident: scored[0].score >= SIM_MIN };
+}
+
+/* ================= 漫画风剖面图 ================= */
+const INK = "#241c18";
+// 每种食材的“外观配置”
+const LOOK = {
+  bun:       { top: { fill: "#e9a63c", shade: "#d98f27", crumb: "#f8ddb0" }, bottom: { fill: "#e2a03a", shade: "#cf8b26" } },
+  patty:     { beef: "#7b4a2c", angus: "#5f3a22", grilledchicken: "#cf9350", spicychicken: "#d97a3c", dragonchicken: "#bd4f36", mcchickenpatty: "#dcaf68", fish: "#eccd93", pork: "#e6a8a1", bacon: "#b0574c", shrimp: "#f09b74", turkeynoodle: "#a83f31" },
+  cheese:    { cheese: "#f8c93c", gouda: "#f3b940" },
+  sauce:     { ketchup: "#d6482d", mustard: "#e7bb2d", beefsauce: "#8a5a33", chickensauce: "#f4d59a", bigmacsauce: "#e8b575", cheesesauce: "#f6bd42", grillsauce: "#a75f2d", chilibutter: "#d9652f", mustardsalad: "#ddca6a", fishsauce: "#eee0b6", butter: "#f8e7a8", turkeysauce: "#c9402c" },
+};
+
+function sesame(cx, y, w) {
+  const pts = [[-0.32, 0.2], [-0.1, 0.02], [0.16, 0.12], [0.34, 0.34], [-0.22, 0.46], [0.04, 0.44]];
+  return pts.map(([fx, fy]) =>
+    `<ellipse cx="${cx + fx * w}" cy="${y + fy * 56}" rx="4.6" ry="7.4" fill="#fdf0d2" stroke="${INK}" stroke-width="1.6" transform="rotate(${fx > 0 ? 18 : -18} ${cx + fx * w} ${y + fy * 56})"/>`
+  ).join("");
+}
+
+function layerSvg(s, y) {
+  const cx = W / 2;
+  const S = `stroke="${INK}" stroke-width="4.2" stroke-linejoin="round" stroke-linecap="round"`;
+  const T = `stroke="${INK}" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"`;
+  const id = s.item.id, cat = s.cat;
+
+  if (cat === "bun") {
+    if (y === 0) return null; // handled by caller
+    return { h: 38, svg: `<g>
+      <path d="M ${cx - 168} ${y + 6} q 168 -14 336 0 l 0 26 q -168 14 -336 0 Z" fill="${LOOK.bun.bottom.shade}" ${S}/>
+      <path d="M ${cx - 168} ${y + 22} q 168 14 336 0 l 0 12 q -168 12 -336 0 Z" fill="${LOOK.bun.bottom.fill}" ${S}/>
+      <path d="M ${cx - 132} ${y + 15} q 132 8 264 0" fill="none" stroke="rgba(120,70,20,.28)" stroke-width="2.4"/>
+    </g>` };
+  }
+  if (cat === "patty") {
+    const fill = LOOK.patty[id] || "#8c5b3f";
+    const h = 44, half = 158;
+    return { h, svg: `<g>
+      <path d="M ${cx - half} ${y + 12} q 0 -14 16 -14 l ${half * 2 - 32} 0 q 16 0 16 14 l 0 20 q 0 12 -14 12 l -${half * 2 - 28} 0 q -14 0 -14 -12 Z" fill="${fill}" ${S}/>
+      <path d="M ${cx - half + 22} ${y + 8} q ${half - 26} 10 ${half * 2 - 44} 0" fill="none" stroke="rgba(255,255,255,.34)" stroke-width="4"/>
+      <g stroke="rgba(30,18,10,.45)" stroke-width="3.2" stroke-linecap="round">
+        <path d="M ${cx - 96} ${y + 26} l 34 -6"/><path d="M ${cx - 44} ${y + 30} l 34 -6"/>
+        <path d="M ${cx + 8} ${y + 26} l 34 -6"/><path d="M ${cx + 60} ${y + 30} l 34 -6"/>
+      </g>
+      <path d="M ${cx - half + 6} ${y + 32} q ${half - 8} 12 ${half * 2 - 12} 0" fill="none" stroke="rgba(0,0,0,.18)" stroke-width="5"/>
+    </g>` };
+  }
+  if (cat === "cheese") {
+    const fill = LOOK.cheese[id] || "#f8c93c";
+    const dark = id === "gouda" ? "#c98d18" : "#d9a01a";
+    const L = cx - 160, R = cx + 160;
+    // 一片薄芝士：两端斜切下垂盖住肉饼，底部 5 个柔和的融化弧
+    let d = `M ${L} ${y + 24} L ${L + 13} ${y + 7} Q ${cx} ${y + 2} ${R - 13} ${y + 7} L ${R} ${y + 24}`;
+    const lobes = 5, lw = (R - L) / lobes;
+    for (let i = 0; i < lobes; i++) d += ` q -${lw / 2} 14 -${lw} 0`;
+    d += " Z";
+    const holes = id === "gouda"
+      ? `<g fill="${dark}" opacity=".45">
+           <ellipse cx="${cx - 82}" cy="${y + 14}" rx="6" ry="4"/>
+           <ellipse cx="${cx + 40}" cy="${y + 12}" rx="5" ry="3.4"/>
+           <ellipse cx="${cx + 96}" cy="${y + 16}" rx="4" ry="2.8"/>
+         </g>`
+      : "";
+    return { h: 32, svg: `<g>
+      <path d="${d}" fill="${fill}" ${S}/>
+      <path d="M ${L + 32} ${y + 11} Q ${cx} ${y + 6} ${R - 32} ${y + 11}" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="4.4" stroke-linecap="round"/>
+      <path d="M ${L + 34} ${y + 22} Q ${cx} ${y + 26} ${R - 34} ${y + 22}" fill="none" stroke="${dark}" stroke-width="2.4" stroke-linecap="round" opacity=".45"/>
+      ${holes}
+    </g>` };
+  }
+  if (cat === "veg") {
+    const half = 162;
+    if (id === "tomato") {
+      return { h: 26, svg: `<g>
+        <rect x="${cx - half + 4}" y="${y}" width="${half * 2 - 8}" height="22" rx="11" fill="#e15c3b" ${S}/>
+        <g fill="#f08a6c"><circle cx="${cx - 96}" cy="${y + 11}" r="4.6"/><circle cx="${cx - 30}" cy="${y + 11}" r="4.6"/><circle cx="${cx + 40}" cy="${y + 11}" r="4.6"/><circle cx="${cx + 104}" cy="${y + 11}" r="4.6"/></g>
+      </g>` };
+    }
+    if (id === "avocado") {
+      return { h: 26, svg: `<g><rect x="${cx - half + 4}" y="${y}" width="${half * 2 - 8}" height="22" rx="11" fill="#86b95e" ${S}/>
+        <rect x="${cx - half + 22}" y="${y + 6}" width="${half * 2 - 44}" height="7" rx="4" fill="#b6d98c"/></g>` };
+    }
+    if (id === "pineapple") {
+      return { h: 34, svg: `<g><circle cx="${cx}" cy="${y + 16}" r="17" fill="#f7d54e" ${S}/>
+        <circle cx="${cx}" cy="${y + 16}" r="8" fill="#fdf3c9" ${T}/>
+        <g stroke="#e0b52f" stroke-width="2"><path d="M ${cx - 15} ${y + 16} l 30 0"/><path d="M ${cx} ${y + 1} l 0 30"/></g></g>` };
+    }
+    if (id === "pickle") {
+      // 酸黄瓜：一排重叠的圆片，能看见籽圈
+      let slices = "";
+      for (let i = -2; i <= 2; i++) {
+        const x = cx + i * 40, yy = y + 16 + (i % 2 ? 1.5 : 0);
+        slices += `<g>
+          <ellipse cx="${x}" cy="${yy}" rx="19" ry="15" fill="#a8c556" ${T}/>
+          <ellipse cx="${x}" cy="${yy}" rx="10" ry="7.6" fill="#d3e492" stroke="rgba(70,95,30,.55)" stroke-width="2"/>
+          <g stroke="rgba(70,95,30,.45)" stroke-width="1.6" stroke-linecap="round">
+            <path d="M ${x - 4} ${yy - 4} l 0 8"/><path d="M ${x + 2} ${yy - 6} l 0 11"/><path d="M ${x + 7} ${yy - 3} l 0 7"/>
+          </g>
+        </g>`;
+      }
+      return { h: 32, svg: `<g>${slices}</g>` };
+    }
+    if (id === "onion") {
+      // 洋葱粒：散落的半透明小丁，不上绿色
+      let cubes = "";
+      const rows = [[y + 9, 11], [y + 18, 9]];
+      rows.forEach(([ry, count], ri) => {
+        for (let i = 0; i < count; i++) {
+          const x = cx - 142 + i * (284 / (count - 1)) + (ri ? 6 : 0);
+          const s = 9 + ((i + ri) % 3) * 1.4;
+          cubes += `<rect x="${(x - s / 2).toFixed(1)}" y="${(ry - s / 2).toFixed(1)}"
+            width="${s.toFixed(1)}" height="${s.toFixed(1)}" rx="2.4"
+            fill="${(i + ri) % 2 ? "#f8eff5" : "#eddfe9"}" ${T}
+            transform="rotate(${((i % 4) - 1.5) * 7} ${x.toFixed(1)} ${ry})"/>`;
+        }
+      });
+      return { h: 27, svg: `<g>
+        <rect x="${cx - 146}" y="${y + 13}" width="292" height="11" rx="5.5" fill="#f3e7ee" opacity=".7"/>
+        ${cubes}
+      </g>` };
+    }
+    if (id === "choppedlettuce") {
+      // 切块生菜：细碎叶丝，短小密集
+      let curls = "";
+      for (let i = 0; i < 11; i++) {
+        const x = cx - 140 + i * 28;
+        const lean = ((i % 3) - 1) * 9;
+        curls += `<path d="M ${x} ${y + 27} q 5 -11 13 -14 q -2 9 1 14 Z"
+          fill="${i % 2 ? "#8cc766" : "#79b957"}" ${T}
+          transform="rotate(${lean} ${x} ${y + 27})"/>`;
+      }
+      return { h: 35, svg: `<g>
+        <rect x="${cx - 150}" y="${y + 21}" width="300" height="13" rx="6.5" fill="#5f9e46" ${S}/>
+        ${curls}
+      </g>` };
+    }
+    // 整片生菜：三片大波浪叶面
+    {
+      const hw = 162, n = 3, step = (hw * 2) / n;
+      let d = `M ${cx - hw} ${y + 21}`;
+      for (let i = 0; i < n; i++) d += ` q ${step / 2} ${i % 2 ? -25 : -17} ${step} 0`;
+      d += ` l 0 10 q -${hw} 9 -${hw * 2} 0 Z`;
+      return { h: 34, svg: `<g>
+        <path d="${d}" fill="#6cb052" ${S}/>
+        <path d="M ${cx - 118} ${y + 14} q 46 -14 94 -5" fill="none" stroke="#4d8738" stroke-width="3.4"/>
+        <path d="M ${cx + 6} ${y + 16} q 50 -14 102 -3" fill="none" stroke="#4d8738" stroke-width="3.4"/>
+        <path d="M ${cx - 62} ${y + 24} q 24 -8 52 -3" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="3"/>
+      </g>` };
+    }
+  }
+  if (cat === "sauce") {
+    const fill = LOOK.sauce[id] || "#c94f30";
+    const half = 146;
+    let d = `M ${cx - half} ${y}`;
+    const n = 6, step = (half * 2) / n;
+    for (let i = 0; i < n; i++) d += ` q ${step / 2} 18 ${step} 0`;
+    d += ` l 0 8 q -${half} 10 -${half * 2} 0 Z`;
+    return { h: 24, svg: `<g><path d="${d}" fill="${fill}" ${T}/>
+      <path d="M ${cx - half + 20} ${y + 7} q ${half - 24} 8 ${half * 2 - 40} 0" fill="none" stroke="rgba(255,255,255,.34)" stroke-width="3.6"/></g>` };
+  }
+  return { h: 0, svg: "" };
+}
+
+function renderBurger() {
+  const bun = stack.find(s => s.cat === "bun");
+  const rest = stack.filter(s => s !== bun);
+  const layerH = s => {
+    if (s.cat === "cheese") return 32;
+    if (s.cat === "sauce") return 24;
+    if (s.cat === "veg") {
+      const id = s.item.id;
+      if (id === "onion") return 27;
+      if (id === "choppedlettuce") return 35;
+      if (id === "tomato" || id === "avocado") return 26;
+      return 34;
+    }
+    return 44;
+  };
+  const bodyH = rest.reduce((a, s) => a + layerH(s), 0);
+  const topH = bun ? 96 : 0, bottomH = bun ? 38 : 0;
+  const H = Math.max(260, 46 + topH + bodyH + bottomH + 54);
+  let y = 42, out = "";
+  out += `<svg id="burgerSvgEl" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}">`;
+  // 桌面 + 投影
+  out += `<ellipse cx="${W / 2}" cy="${H - 22}" rx="150" ry="12" fill="rgba(36,28,24,.13)"/>`;
+  out += `<ellipse cx="${W / 2}" cy="${H - 26}" rx="112" ry="7" fill="rgba(36,28,24,.09)"/>`;
+  // 漫画蒸汽
+  out += `<g stroke="${INK}" stroke-width="3.4" fill="none" stroke-linecap="round" opacity=".55">
+    <path d="M ${W / 2 - 62} ${y - 6} q -10 -14 0 -26"/>
+    <path d="M ${W / 2} ${y - 14} q -11 -16 0 -30"/>
+    <path d="M ${W / 2 + 62} ${y - 6} q -10 -14 0 -26"/>
+  </g>`;
+  // 顶部堡冠
+  if (bun) {
+    const cx = W / 2;
+    out += `<g>
+      <path d="M ${cx - 168} ${y + 74} C ${cx - 168} ${y - 4} ${cx - 84} ${y - 28} ${cx} ${y - 28}
+               C ${cx + 84} ${y - 28} ${cx + 168} ${y - 4} ${cx + 168} ${y + 74}
+               q -168 16 -336 0 Z" fill="${LOOK.bun.top.fill}" ${`stroke="${INK}" stroke-width="4.2" stroke-linejoin="round"`}/>
+      <path d="M ${cx - 150} ${y + 22} C ${cx - 132} ${y - 8} ${cx - 72} ${y - 22} ${cx} ${y - 22}" fill="none" stroke="rgba(255,255,255,.42)" stroke-width="9" stroke-linecap="round"/>
+      ${sesame(cx, y, 300)}
+      <path d="M ${cx - 168} ${y + 66} q 168 16 336 0" fill="none" stroke="rgba(120,70,20,.3)" stroke-width="3.4"/>
+    </g>`;
+    y += 74;
+  }
+  // 中间层（后加的在上面）
+  for (let i = rest.length - 1; i >= 0; i--) {
+    const r = layerSvg(rest[i], y);
+    if (r) { out += r.svg; y += r.h; }
+  }
+  // 底部堡底
+  if (bun) { const r = layerSvg({ cat: "bun", item: bun.item }, y); out += r.svg; y += r.h; }
+  out += `</svg>`;
+  document.getElementById("burgerSvg").innerHTML = out;
+
+  const sim = similarity();
+  const simBox = document.getElementById("similarity");
+  if (!sim || !sim.top.length) {
+    simBox.innerHTML = `<span style="color:#b3a28c">还没有食材，先从下面加一层肉</span>`;
+  } else {
+    const pc = x => Math.round(x.score * 100);
+    const [a, ...rest] = sim.top;
+    const chip = x => x.onSale === null ? ""
+      : x.onSale ? `<span class="sim-chip on">本店在售</span>`
+                 : `<span class="sim-chip off">本店不售</span>`;
+    const restLine = rest.length
+      ? `<div class="sim-rest">次选：${rest.map(x => `${x.name} <b>${pc(x)}%</b>${chip(x)}`).join(" · ")}</div>`
+      : "";
+    const gapLine = a.missing.length
+      ? `<div class="sim-gap">再补 ${a.missing.length} 层就是它：${a.missing.slice(0, 3).map(m => DATA.nameOf[m.id] || m.id).join("、")}${a.missing.length > 3 ? " 等" : ""}</div>`
+      : `<div class="sim-gap exact">配方完全一致 ✓</div>`;
+    simBox.innerHTML = sim.confident
+      ? `<div class="sim-lead">官方最接近产品：<span class="name">${a.name}</span><b>${pc(a)}%</b>${chip(a)}</div>${gapLine}${restLine}`
+      : `<div class="sim-lead none">你这颗是原创 🎉</div>
+         <div class="sim-rest">最接近的也只有 ${a.name} ${pc(a)}%，差得有点远</div>`;
+  }
+}
+
+/* ---------------- share card ---------------- */
+function openShare() {
+  if (!stack.length) { flash("先搭一颗汉堡再出餐"); return; }
+  document.getElementById("modal").classList.add("show");
+  drawCard();
+}
+function closeShare() { document.getElementById("modal").classList.remove("show"); }
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+}
+function wrapText(ctx, text, x, y, maxW, lh) {
+  let line = "", yy = y;
+  for (const ch of text) {
+    if (ctx.measureText(line + ch).width > maxW) { ctx.fillText(line, x, yy); line = ch; yy += lh; }
+    else line += ch;
+  }
+  ctx.fillText(line, x, yy);
+}
+function drawCard() {
+  const name = document.getElementById("burgerName").value.trim() || "无名麦门堡";
+  const t = totals();
+  const sim = similarity();
+  const canvas = document.getElementById("shareCanvas");
+  const ctx = canvas.getContext("2d");
+  const CW = canvas.width, CH = canvas.height;
+  ctx.fillStyle = "#fbf3e6"; ctx.fillRect(0, 0, CW, CH);
+  for (let x = 22; x < CW; x += 26) for (let yy = 22; yy < CH; yy += 26) { ctx.fillStyle = "#efe1cb"; ctx.beginPath(); ctx.arc(x, yy, 1.7, 0, 7); ctx.fill(); }
+  ctx.strokeStyle = INK; ctx.lineWidth = 6; ctx.strokeRect(24, 24, CW - 48, CH - 48);
+  ctx.lineWidth = 2.5; ctx.strokeRect(38, 38, CW - 76, CH - 76);
+
+  ctx.textAlign = "center"; ctx.fillStyle = INK;
+  ctx.font = "800 26px 'PingFang SC', sans-serif";
+  ctx.fillText("麦门汉堡搭建器 · 出餐凭证", CW / 2, 92);
+  ctx.font = "400 17px 'PingFang SC', sans-serif"; ctx.fillStyle = "#8b7862";
+  ctx.fillText("定制专属于你的麦门汉堡🍔", CW / 2, 122);
+
+  ctx.font = "900 54px 'PingFang SC', sans-serif"; ctx.fillStyle = "#e0452a";
+  ctx.fillText(name, CW / 2, 190);
+
+  const svgEl = document.getElementById("burgerSvgEl");
+  const img = new Image();
+  img.onload = () => {
+    const iw = 540, ih = iw * (img.height / img.width);
+    ctx.drawImage(img, (CW - iw) / 2, 214, iw, ih);
+    const y0 = Math.max(760, 214 + ih + 24);
+    // 热量主视觉
+    ctx.textAlign = "left";
+    ctx.fillStyle = "#fff6e2"; ctx.strokeStyle = INK; ctx.lineWidth = 5;
+    roundRect(ctx, 60, y0, CW - 120, 132, 16); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = INK; ctx.font = "900 64px 'PingFang SC', sans-serif";
+    ctx.fillText(String(Math.round(t.kcal)), 92, y0 + 84);
+    ctx.font = "700 20px 'PingFang SC', sans-serif"; ctx.fillStyle = "#8b7862";
+    ctx.fillText("KCAL", 92, y0 + 112);
+    ctx.fillStyle = "#e0452a"; ctx.font = "800 26px 'PingFang SC', sans-serif";
+    ctx.fillText(`每日推荐 ${Math.round(t.kcal / 2000 * 100)}%`, 300, y0 + 56);
+    ctx.fillStyle = INK; ctx.font = "600 20px 'PingFang SC', sans-serif";
+    ctx.fillText(`蛋白 ${t.protein.toFixed(1)}g · 脂肪 ${t.fat.toFixed(1)}g`, 300, y0 + 88);
+    ctx.fillText(`碳水 ${t.carb.toFixed(1)}g · 钠 ${Math.round(t.sodium)}mg`, 300, y0 + 116);
+
+    // 组成
+    ctx.textAlign = "center"; ctx.fillStyle = "#5a4a3a";
+    ctx.font = "400 19px 'PingFang SC', sans-serif";
+    wrapText(ctx, stack.map(s => s.item.name).join(" → "), CW / 2, y0 + 178, CW - 150, 28);
+    if (sim && sim.top.length) {
+      const a = sim.top[0], rest = sim.top.slice(1);
+      const pc = x => Math.round(x.score * 100);
+      ctx.font = "700 22px 'PingFang SC', sans-serif"; ctx.fillStyle = INK;
+      ctx.fillText(sim.confident
+        ? `官方最接近：${a.name} · 相似度 ${pc(a)}%`
+        : `原创配方 · 与官方最像的 ${a.name} 也才 ${pc(a)}%`, CW / 2, y0 + 246);
+      if (rest.length && y0 + 272 < CH - 100) {
+        ctx.font = "400 17px 'PingFang SC', sans-serif"; ctx.fillStyle = "#8b7862";
+        ctx.fillText(`次选：${rest.map(x => `${x.name} ${pc(x)}%`).join(" · ")}`, CW / 2, y0 + 272);
+      }
+    }
+    ctx.font = "400 17px 'PingFang SC', sans-serif"; ctx.fillStyle = "#9c8b76";
+    ctx.fillText("营养基于麦当劳中国 MCP 官方营养数据 · 创意层为许愿项", CW / 2, CH - 66);
+    ctx.fillText("MCD BURGER BUILDER", CW / 2, CH - 40);
+  };
+  img.src = "data:image/svg+xml;base64," + btoa(unescape(encodeURIComponent(new XMLSerializer().serializeToString(svgEl))));
+}
+function downloadCard() {
+  drawCard();
+  setTimeout(() => {
+    const a = document.createElement("a");
+    a.download = (document.getElementById("burgerName").value.trim() || "maimen-burger") + ".png";
+    a.href = document.getElementById("shareCanvas").toDataURL("image/png");
+    a.click();
+  }, 350);
+}
+
+/* ---------------- live MCP mode ---------------- */
+function openLive() { document.getElementById("liveModal").classList.add("show"); }
+function closeLive() { document.getElementById("liveModal").classList.remove("show"); }
+async function doLive() {
+  const token = document.getElementById("liveToken").value.trim();
+  const city = document.getElementById("liveCity").value.trim();
+  const keyword = document.getElementById("liveKeyword").value.trim();
+  const status = document.getElementById("liveStatus");
+  if (!token) { status.textContent = "请填入 MCP Token（仅保存在本机内存）"; return; }
+  status.textContent = "正在通过本地代理调用麦当劳 MCP…";
+  try {
+    const r = await fetch("http://127.0.0.1:8787/api/live-menu", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token, city, keyword }),
+    });
+    const d = await r.json();
+    if (!d.ok) throw new Error(d.error || "同步失败");
+    soldOut = new Set(d.soldOut || []);
+    liveOnSale = new Set(d.onSaleReal || []);
+    const extra = (d.unlisted && d.unlisted.length) ? ` · 另有 ${d.unlisted.length} 款官方菜单未收录` : "";
+    status.textContent = `同步成功：${d.storeName} · 在售汉堡 ${d.burgers} 款 · 不可用食材 ${soldOut.size} 项${extra}`;
+    const badge = document.getElementById("liveBadge");
+    badge.className = "live-badge on";
+    badge.textContent = `实时：${d.storeName} · 在售汉堡 ${d.burgers} 款 · 本店不可用食材 ${soldOut.size} 项${extra}`;
+    renderItems(); renderBurger(); renderNutrition();
+    setTimeout(closeLive, 1200);
+  } catch (e) {
+    status.textContent = "同步失败：" + e.message + "（请先运行 python3 tools/live_proxy.py 启动本地代理）";
+  }
+}
+
+init();
+</script>
+</body>
+</html>

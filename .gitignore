@@ -1,0 +1,13 @@
+node_modules/
+.DS_Store
+*.log
+
+# Python 运行时残留
+__pycache__/
+*.py[cod]
+.venv/
+
+# 本地凭据（Token 只走环境变量，任何情况下都不要提交）
+.env
+*.token
+*.secret
