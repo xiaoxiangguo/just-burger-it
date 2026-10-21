@@ -197,7 +197,7 @@ def live_check(args, stack):
 
 
 def main():
-    ap = argparse.ArgumentParser(description="麦门之搭了个堡 CLI — 定制专属于你的麦门汉堡🍔")
+    ap = argparse.ArgumentParser(description="麦门之搭了个堡 CLI — 麦门信徒，要吃属于自己的汉堡🍔")
     sub = ap.add_subparsers(dest="cmd", required=True)
 
     p_list = sub.add_parser("list", help="列出组件库")
